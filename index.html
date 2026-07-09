@@ -4,34 +4,38 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SportAtlas — AI Multi-Sport Coaching Platform</title>
-  <meta name="description" content="Build better athletes. SportAtlas gives coaches and clubs the tools to create drills, plan training sessions, analyse matches, and manage teams — powered by AI." />
+  <meta name="description" content="Build better athletes. SportAtlas gives coaches and clubs the tools to create drills, plan training, analyse matches, and manage teams — powered by AI." />
   <meta property="og:title" content="SportAtlas — AI Multi-Sport Coaching Platform" />
-  <meta property="og:description" content="Build better athletes with drills, match analysis, team management and AI coaching — all in one app." />
   <meta property="og:type" content="website" />
   <meta name="theme-color" content="#0E1013" />
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
-
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #0E1013;
-      --surface:   #16191F;
-      --surface2:  #1E222A;
-      --line:      #272C35;
-      --line2:     #343A45;
-      --text-hi:   #F4F5F7;
-      --text-mid:  #A8ADB8;
-      --text-low:  #6B7280;
-      --brand:     #E8743C;
-      --brand-dim: #B25A2C;
-      --brand-soft:rgba(232,116,60,0.12);
-      --success:   #34C27A;
-      --info:      #4CC2E0;
-      --warning:   #F0B429;
+      --bg:          #0B0D10;
+      --surface:     #13161B;
+      --surface2:    #1A1E26;
+      --surface3:    #222733;
+      --line:        #252B36;
+      --line2:       #323A48;
+      --text-hi:     #F0F2F5;
+      --text-mid:    #9AA3B2;
+      --text-low:    #5C6370;
+      --brand:       #E8743C;
+      --brand-light: #F09060;
+      --brand-dim:   #B25A2C;
+      --brand-soft:  rgba(232,116,60,.1);
+      --brand-glow:  rgba(232,116,60,.2);
+      --success:     #30C26E;
+      --info:        #38B2D8;
+      --warning:     #F0B429;
+      --r-sm: 8px;
+      --r-md: 12px;
+      --r-lg: 16px;
+      --r-xl: 24px;
     }
 
     html { scroll-behavior: smooth; }
@@ -44,1319 +48,1191 @@
       overflow-x: hidden;
     }
 
-    /* ── NOISE OVERLAY ── */
-    body::before {
-      content: '';
+    /* ── GRID BG ── */
+    .grid-bg {
       position: fixed;
       inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
       pointer-events: none;
       z-index: 0;
-      opacity: .5;
+      background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 0%, transparent 100%);
     }
 
-    /* ── NAVBAR ── */
+    /* ── NAV ── */
     nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 clamp(1.5rem, 5vw, 4rem);
-      height: 64px;
-      background: rgba(14,16,19,0.8);
-      backdrop-filter: blur(16px);
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(1.5rem, 5vw, 5rem);
+      height: 60px;
+      background: rgba(11,13,16,.85);
+      backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--line);
+      transition: transform .3s ease;
     }
 
     .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: .6rem;
-      text-decoration: none;
-      color: var(--text-hi);
-      font-weight: 800;
-      font-size: 1.1rem;
-      letter-spacing: -.02em;
+      display: flex; align-items: center; gap: .55rem;
+      text-decoration: none; color: var(--text-hi);
+      font-weight: 800; font-size: 1rem; letter-spacing: -.02em;
     }
-
-    .nav-logo-icon {
-      width: 32px; height: 32px;
+    .logo-box {
+      width: 30px; height: 30px; border-radius: 7px;
       background: var(--brand);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
     }
 
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      list-style: none;
-    }
-
+    .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
     .nav-links a {
-      text-decoration: none;
-      color: var(--text-mid);
-      font-size: .9rem;
-      font-weight: 500;
-      transition: color .2s;
+      text-decoration: none; color: var(--text-mid); font-size: .875rem;
+      font-weight: 500; transition: color .2s;
     }
     .nav-links a:hover { color: var(--text-hi); }
 
-    .btn-nav {
-      background: var(--brand);
-      color: #fff;
-      border: none;
-      padding: .5rem 1.25rem;
-      border-radius: 8px;
-      font-size: .9rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
+    .btn-cta-sm {
+      background: var(--brand); color: #fff;
+      border: none; padding: .45rem 1.1rem;
+      border-radius: var(--r-sm); font-size: .875rem; font-weight: 600;
+      cursor: pointer; text-decoration: none;
       transition: background .2s, transform .15s;
+      white-space: nowrap;
     }
-    .btn-nav:hover { background: #f08040; transform: translateY(-1px); }
+    .btn-cta-sm:hover { background: var(--brand-light); transform: translateY(-1px); }
 
-    .nav-mobile-hide { display: flex; }
+    @media (max-width: 640px) { .nav-links { display: none; } }
 
     /* ── HERO ── */
     .hero {
       position: relative;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
       text-align: center;
-      padding: 6rem clamp(1.5rem, 5vw, 4rem) 4rem;
+      padding: 7rem clamp(1.5rem, 5vw, 4rem) 5rem;
       overflow: hidden;
     }
 
-    /* animated gradient orbs */
-    .orb {
+    .hero-glow {
       position: absolute;
-      border-radius: 50%;
-      filter: blur(100px);
-      opacity: .35;
-      animation: drift 12s ease-in-out infinite;
+      width: 900px; height: 500px;
+      background: radial-gradient(ellipse, rgba(232,116,60,.18) 0%, transparent 70%);
+      top: 10%; left: 50%; transform: translateX(-50%);
       pointer-events: none;
     }
-    .orb-1 { width: 600px; height: 600px; background: var(--brand); top: -200px; left: -200px; animation-delay: 0s; }
-    .orb-2 { width: 500px; height: 500px; background: #4a1b6b; top: 0; right: -150px; animation-delay: -4s; }
-    .orb-3 { width: 400px; height: 400px; background: #1b3a6b; bottom: -100px; left: 30%; animation-delay: -8s; }
 
-    @keyframes drift {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33%       { transform: translate(40px, -30px) scale(1.05); }
-      66%       { transform: translate(-20px, 20px) scale(.95); }
-    }
-
-    .hero-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: .5rem;
-      background: var(--brand-soft);
-      border: 1px solid rgba(232,116,60,.25);
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: .45rem;
+      border: 1px solid rgba(232,116,60,.3);
       border-radius: 999px;
-      padding: .35rem 1rem;
-      font-size: .8rem;
+      padding: .3rem .9rem;
+      font-size: .75rem;
       font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
+      font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
       color: var(--brand);
-      text-transform: uppercase;
-      letter-spacing: .08em;
       margin-bottom: 1.75rem;
       position: relative;
     }
-
     .eyebrow-dot {
-      width: 6px; height: 6px;
+      width: 5px; height: 5px; border-radius: 50%;
       background: var(--brand);
-      border-radius: 50%;
-      animation: pulse-dot 1.5s ease-in-out infinite;
+      animation: blink 1.4s ease-in-out infinite;
     }
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: .4; transform: scale(.7); }
-    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
 
-    .hero h1 {
-      font-size: clamp(2.8rem, 7vw, 6rem);
+    h1 {
+      font-size: clamp(3rem, 8vw, 6.5rem);
       font-weight: 900;
-      letter-spacing: -.04em;
-      line-height: 1.05;
-      max-width: 900px;
+      letter-spacing: -.05em;
+      line-height: 1.0;
       position: relative;
     }
-
-    .hero h1 .accent {
-      background: linear-gradient(135deg, var(--brand) 0%, #f0a060 50%, var(--brand) 100%);
-      background-size: 200% auto;
+    .grad-text {
+      background: linear-gradient(120deg, var(--brand) 0%, #f5a06a 60%, var(--brand) 100%);
+      background-size: 200%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      animation: shimmer 4s linear infinite;
+      animation: shimmer 5s linear infinite;
     }
-    @keyframes shimmer {
-      0%   { background-position: 0% center; }
-      100% { background-position: 200% center; }
-    }
+    @keyframes shimmer { from{background-position:0%} to{background-position:200%} }
 
     .hero-sub {
-      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      font-size: clamp(.95rem, 2vw, 1.2rem);
       color: var(--text-mid);
-      max-width: 600px;
-      margin: 1.5rem auto 2.5rem;
+      max-width: 560px; margin: 1.5rem auto 2.5rem;
+      font-weight: 400; line-height: 1.65;
       position: relative;
-      font-weight: 400;
     }
 
-    .hero-cta {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      position: relative;
+    .hero-btns {
+      display: flex; gap: .875rem; justify-content: center;
+      flex-wrap: wrap; position: relative;
     }
 
     .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: .6rem;
-      background: var(--brand);
-      color: #fff;
+      display: inline-flex; align-items: center; gap: .55rem;
+      background: var(--brand); color: #fff;
       text-decoration: none;
-      padding: .9rem 2rem;
-      border-radius: 12px;
-      font-size: 1.05rem;
-      font-weight: 700;
+      padding: .8rem 1.75rem;
+      border-radius: var(--r-md);
+      font-size: 1rem; font-weight: 700;
+      box-shadow: 0 0 0 0 var(--brand-glow);
       transition: all .2s;
-      box-shadow: 0 0 0 0 rgba(232,116,60,.4);
-      animation: glow-pulse 3s ease-in-out infinite;
+      animation: btn-pulse 3s ease-in-out infinite;
     }
-    .btn-primary:hover { background: #f08040; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(232,116,60,.35); }
-
-    @keyframes glow-pulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(232,116,60,.25); }
-      50%       { box-shadow: 0 0 0 12px rgba(232,116,60,.0); }
+    .btn-primary:hover { background: var(--brand-light); transform: translateY(-2px); box-shadow: 0 8px 40px var(--brand-glow); }
+    @keyframes btn-pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(232,116,60,.3); }
+      50%      { box-shadow: 0 0 0 14px rgba(232,116,60,0); }
     }
 
-    .btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: .6rem;
-      background: var(--surface);
-      color: var(--text-hi);
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: .55rem;
+      background: var(--surface); color: var(--text-hi);
       text-decoration: none;
-      padding: .9rem 2rem;
-      border-radius: 12px;
-      font-size: 1.05rem;
-      font-weight: 600;
+      padding: .8rem 1.75rem;
+      border-radius: var(--r-md);
+      font-size: 1rem; font-weight: 600;
       border: 1px solid var(--line2);
       transition: all .2s;
     }
-    .btn-secondary:hover { background: var(--surface2); transform: translateY(-2px); }
+    .btn-ghost:hover { background: var(--surface2); transform: translateY(-2px); }
 
-    /* ── SPORTS STRIP ── */
-    .sports-strip {
-      position: relative;
-      padding: 3rem clamp(1.5rem, 5vw, 4rem);
+    /* ── SOCIAL PROOF ── */
+    .social-proof {
+      display: flex; align-items: center; gap: 1rem;
+      margin-top: 2.5rem; position: relative;
+      justify-content: center; flex-wrap: wrap;
+    }
+    .avatars { display: flex; }
+    .avatar-bubble {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 2px solid var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .7rem; font-weight: 700; color: #fff;
+      margin-left: -8px;
+    }
+    .avatar-bubble:first-child { margin-left: 0; }
+    .social-text { font-size: .8rem; color: var(--text-low); }
+    .social-text strong { color: var(--text-mid); }
+    .stars-sm { color: var(--warning); font-size: .75rem; }
+
+    /* ── SPORTS TICKER ── */
+    .ticker-wrap {
+      overflow: hidden;
       border-top: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
-      overflow: hidden;
+      background: var(--surface);
+      padding: .875rem 0;
+      mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
     }
-
-    .sports-scroll {
-      display: flex;
-      gap: 2rem;
-      animation: scroll-left 20s linear infinite;
+    .ticker {
+      display: flex; gap: 1.5rem;
+      animation: ticker 22s linear infinite;
       width: max-content;
     }
+    @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    .tick-item {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-size: .85rem; font-weight: 600; color: var(--text-low);
+      white-space: nowrap; padding: 0 .75rem;
+    }
+    .tick-item span { font-size: 1rem; }
+    .tick-sep { color: var(--line2); user-select: none; }
 
-    .sports-scroll-wrap {
-      overflow: hidden;
-      mask: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    /* ── SECTION ── */
+    .section {
+      max-width: 1200px; margin: 0 auto;
+      padding: clamp(5rem, 9vw, 8rem) clamp(1.5rem, 5vw, 4rem);
+    }
+    .section-full {
+      padding: clamp(4rem, 7vw, 7rem) 0;
     }
 
-    @keyframes scroll-left {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-
-    .sport-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: .6rem;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: .5rem 1.25rem;
-      font-size: .9rem;
-      font-weight: 600;
-      white-space: nowrap;
-      color: var(--text-mid);
-    }
-    .sport-chip span { font-size: 1.2rem; }
-
-    /* ── SECTION COMMON ── */
-    section {
-      position: relative;
-      padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 5vw, 4rem);
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .section-label {
+    .label {
       font-family: 'JetBrains Mono', monospace;
-      font-size: .75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      color: var(--brand);
-      margin-bottom: .75rem;
+      font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: var(--brand); margin-bottom: .6rem;
+    }
+    .h2 {
+      font-size: clamp(1.75rem, 4vw, 2.8rem);
+      font-weight: 800; letter-spacing: -.04em; line-height: 1.12;
+    }
+    .sub {
+      color: var(--text-mid); font-size: 1rem;
+      line-height: 1.7; max-width: 520px;
     }
 
-    .section-title {
-      font-size: clamp(1.8rem, 4vw, 3rem);
-      font-weight: 800;
-      letter-spacing: -.03em;
-      line-height: 1.15;
-      margin-bottom: 1rem;
-    }
-
-    .section-sub {
-      color: var(--text-mid);
-      font-size: 1.05rem;
-      max-width: 560px;
-      margin-bottom: 3rem;
-    }
-
-    /* ── FEATURE GRID ── */
-    .features-grid {
+    /* ── FEATURE CARDS ── */
+    .feat-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.25rem;
-    }
-
-    .feature-card {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 1.75rem;
-      transition: all .3s;
-      position: relative;
-      overflow: hidden;
-    }
-    .feature-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, var(--brand-soft) 0%, transparent 60%);
-      opacity: 0;
-      transition: opacity .3s;
-    }
-    .feature-card:hover { border-color: rgba(232,116,60,.35); transform: translateY(-3px); }
-    .feature-card:hover::before { opacity: 1; }
-
-    .feature-icon {
-      width: 48px; height: 48px;
-      border-radius: 12px;
-      background: var(--brand-soft);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .feature-card h3 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      margin-bottom: .4rem;
-    }
-
-    .feature-card p {
-      font-size: .9rem;
-      color: var(--text-mid);
-      line-height: 1.6;
-    }
-
-    .feature-tag {
-      display: inline-block;
-      margin-top: .75rem;
-      font-size: .72rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
-      color: var(--brand);
-      background: var(--brand-soft);
-      padding: .2rem .6rem;
-      border-radius: 6px;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-    }
-
-    /* ── BIG FEATURE SHOWCASE ── */
-    .showcase {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-      align-items: center;
-    }
-    .showcase.reverse { direction: rtl; }
-    .showcase.reverse > * { direction: ltr; }
-
-    .showcase-visual {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      aspect-ratio: 4/3;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .mock-screen {
-      width: 90%; height: 90%;
-      background: var(--surface2);
-      border-radius: 12px;
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: .75rem;
-    }
-
-    .mock-bar {
-      height: 10px;
-      border-radius: 999px;
-      background: var(--line2);
-    }
-    .mock-bar.brand { background: var(--brand); width: 40%; }
-    .mock-bar.short { width: 60%; }
-    .mock-bar.shorter { width: 30%; }
-
-    .mock-card-row {
-      display: flex;
-      gap: .5rem;
-      flex: 1;
-    }
-
-    .mock-card {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
       background: var(--line);
-      border-radius: 8px;
-      flex: 1;
+      border: 1px solid var(--line);
+      border-radius: var(--r-xl);
+      overflow: hidden;
+    }
+    @media (max-width: 900px) { .feat-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 560px) { .feat-grid { grid-template-columns: 1fr; } }
+
+    .feat-card {
+      background: var(--surface);
+      padding: 2rem;
+      transition: background .25s;
       position: relative;
       overflow: hidden;
     }
-    .mock-card::after {
+    .feat-card:hover { background: var(--surface2); }
+    .feat-card::before {
       content: '';
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 24px; height: 24px;
-      border-radius: 50%;
-      background: var(--brand-soft);
-      border: 2px solid rgba(232,116,60,.3);
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--brand-soft) 0%, transparent 60%);
+      opacity: 0; transition: opacity .25s;
+    }
+    .feat-card:hover::before { opacity: 1; }
+
+    .feat-icon {
+      font-size: 1.6rem; margin-bottom: 1rem;
+      display: block;
+    }
+    .feat-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: .35rem; }
+    .feat-card p { font-size: .875rem; color: var(--text-mid); line-height: 1.6; }
+    .feat-badge {
+      display: inline-block; margin-top: .75rem;
+      font-size: .65rem; font-family: 'JetBrains Mono', monospace;
+      font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+      color: var(--brand); background: var(--brand-soft);
+      border: 1px solid rgba(232,116,60,.2);
+      padding: .2rem .55rem; border-radius: 5px;
     }
 
-    /* court diagram mock */
-    .mock-court {
-      width: 100%; height: 100%;
-      background: #0a2010;
-      border-radius: 8px;
-      border: 2px solid #1a4020;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    .mock-court::before {
-      content: '';
-      position: absolute;
-      width: 40%; height: 55%;
-      border: 2px solid rgba(255,255,255,.15);
-      border-radius: 4px;
-    }
-    .court-dot {
-      position: absolute;
-      width: 12px; height: 12px;
-      border-radius: 50%;
-      border: 2px solid;
-    }
-    .court-dot.home { background: var(--brand); border-color: var(--brand); }
-    .court-dot.away { background: var(--info); border-color: var(--info); }
-    .court-arrow {
-      position: absolute;
-      width: 40px; height: 2px;
-      background: var(--brand);
-      transform-origin: left center;
-    }
-
-    .showcase-text .section-label { margin-top: 0; }
-    .showcase-text h2 {
-      font-size: clamp(1.6rem, 3.5vw, 2.5rem);
-      font-weight: 800;
-      letter-spacing: -.03em;
-      line-height: 1.15;
-      margin-bottom: 1rem;
-    }
-    .showcase-text p {
-      color: var(--text-mid);
-      line-height: 1.7;
-      margin-bottom: 1.5rem;
-    }
-
-    .check-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: .6rem;
-    }
-    .check-list li {
-      display: flex;
-      align-items: center;
-      gap: .6rem;
-      font-size: .95rem;
-      color: var(--text-mid);
-    }
-    .check-list li::before {
-      content: '✓';
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 20px; height: 20px;
-      background: rgba(52,194,122,.15);
-      color: var(--success);
-      border-radius: 50%;
-      font-size: .7rem;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    /* ── STATS ── */
-    .stats-section {
+    /* ── STATS BAND ── */
+    .stats-band {
       background: var(--surface);
       border-top: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
-      max-width: 100%;
     }
     .stats-inner {
-      max-width: 1200px;
-      margin: 0 auto;
+      max-width: 1200px; margin: 0 auto;
       padding: 4rem clamp(1.5rem, 5vw, 4rem);
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 2rem;
-      text-align: center;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 2rem; text-align: center;
     }
+    @media (max-width: 700px) { .stats-inner { grid-template-columns: repeat(2,1fr); } }
     .stat-num {
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      font-weight: 900;
-      letter-spacing: -.04em;
-      line-height: 1;
-      background: linear-gradient(135deg, var(--brand), #f0a060);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-size: clamp(2.25rem, 5vw, 3.5rem);
+      font-weight: 900; letter-spacing: -.04em; line-height: 1;
+      background: linear-gradient(135deg, var(--brand), #f5a06a);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    .stat-label {
-      font-size: .9rem;
-      color: var(--text-mid);
-      margin-top: .4rem;
-      font-weight: 500;
+    .stat-lbl { font-size: .85rem; color: var(--text-low); margin-top: .4rem; font-weight: 500; }
+
+    /* ── BENTO SHOWCASE ── */
+    .bento {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 1rem;
     }
+    @media (max-width: 768px) { .bento { grid-template-columns: 1fr; } }
+
+    .bento-cell {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--r-xl);
+      padding: 2rem;
+      overflow: hidden;
+      position: relative;
+    }
+    .bento-cell.tall { grid-row: span 2; }
+    .bento-cell.wide { grid-column: span 2; }
+    @media (max-width: 768px) {
+      .bento-cell.tall, .bento-cell.wide { grid-row: span 1; grid-column: span 1; }
+    }
+
+    .bento-label {
+      font-size: .7rem; font-family: 'JetBrains Mono', monospace;
+      font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+      color: var(--brand); margin-bottom: .5rem;
+    }
+    .bento-title {
+      font-size: 1.2rem; font-weight: 800; letter-spacing: -.03em;
+      margin-bottom: .5rem; line-height: 1.25;
+    }
+    .bento-sub {
+      font-size: .875rem; color: var(--text-mid); line-height: 1.6;
+    }
+
+    /* ── DRILL CARD VISUAL ── */
+    .drill-visual {
+      margin-top: 1.5rem;
+      display: flex; flex-direction: column; gap: .75rem;
+    }
+    .drill-item {
+      display: flex; align-items: center; gap: .875rem;
+      background: var(--surface2);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      padding: .875rem 1rem;
+      transition: border-color .2s;
+    }
+    .drill-item:hover { border-color: var(--line2); }
+    .drill-num {
+      width: 28px; height: 28px; border-radius: var(--r-sm);
+      background: var(--brand-soft); border: 1px solid rgba(232,116,60,.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .7rem; font-weight: 700; color: var(--brand);
+      font-family: 'JetBrains Mono', monospace;
+      flex-shrink: 0;
+    }
+    .drill-info { flex: 1; min-width: 0; }
+    .drill-name { font-size: .9rem; font-weight: 600; }
+    .drill-meta { font-size: .75rem; color: var(--text-low); margin-top: .1rem; }
+    .drill-badge {
+      font-size: .65rem; font-weight: 700; padding: .2rem .5rem;
+      border-radius: 5px; flex-shrink: 0;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .badge-shoot { background: rgba(52,194,122,.12); color: var(--success); }
+    .badge-drib  { background: rgba(76,194,224,.12); color: var(--info); }
+    .badge-def   { background: rgba(232,116,60,.12); color: var(--brand); }
+    .badge-cond  { background: rgba(240,180,41,.12); color: var(--warning); }
+
+    /* ── MATCH STATS VISUAL ── */
+    .match-visual { margin-top: 1.5rem; }
+    .match-scoreboard {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--surface2); border: 1px solid var(--line);
+      border-radius: var(--r-md); padding: 1.25rem 1.5rem;
+      margin-bottom: .75rem;
+    }
+    .match-team { text-align: center; }
+    .match-team-name { font-size: .7rem; font-weight: 700; color: var(--text-low); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .3rem; }
+    .match-score { font-size: 2.5rem; font-weight: 900; letter-spacing: -.04em; line-height: 1; }
+    .score-home { color: var(--brand); }
+    .score-away { color: var(--info); }
+    .match-mid { display: flex; flex-direction: column; align-items: center; gap: .3rem; }
+    .match-live {
+      display: flex; align-items: center; gap: .3rem;
+      background: rgba(229,72,77,.15); border: 1px solid rgba(229,72,77,.3);
+      border-radius: 999px; padding: .2rem .6rem;
+      font-size: .65rem; font-family: 'JetBrains Mono', monospace;
+      font-weight: 700; color: #E5484D;
+    }
+    .live-dot {
+      width: 5px; height: 5px; border-radius: 50%; background: #E5484D;
+      animation: blink 1s infinite;
+    }
+    .match-quarter { font-size: .7rem; color: var(--text-low); font-weight: 600; }
+    .match-stats-row {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: .5rem;
+    }
+    .match-stat-box {
+      background: var(--surface2); border: 1px solid var(--line);
+      border-radius: var(--r-sm); padding: .75rem;
+      text-align: center;
+    }
+    .msb-val { font-size: 1.1rem; font-weight: 800; letter-spacing: -.03em; }
+    .msb-lbl { font-size: .65rem; color: var(--text-low); margin-top: .15rem; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; }
+
+    /* ── AI VISUAL ── */
+    .ai-visual { margin-top: 1.5rem; display: flex; flex-direction: column; gap: .6rem; }
+    .chat-bubble {
+      max-width: 90%; padding: .75rem 1rem;
+      border-radius: var(--r-md); font-size: .85rem; line-height: 1.55;
+    }
+    .chat-bubble.user {
+      align-self: flex-end;
+      background: var(--surface3); border: 1px solid var(--line2);
+      color: var(--text-hi);
+      border-bottom-right-radius: 4px;
+    }
+    .chat-bubble.ai {
+      align-self: flex-start;
+      background: linear-gradient(135deg, rgba(232,116,60,.12) 0%, var(--surface2) 100%);
+      border: 1px solid rgba(232,116,60,.2);
+      color: var(--text-mid);
+      border-bottom-left-radius: 4px;
+    }
+    .chat-bubble.ai strong { color: var(--brand); }
+    .chat-sender {
+      font-size: .65rem; font-weight: 700; margin-bottom: .3rem;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase; letter-spacing: .08em;
+    }
+    .sender-ai { color: var(--brand); }
+    .sender-you { color: var(--text-low); text-align: right; }
+
+    /* ── TEAM VISUAL ── */
+    .team-visual { margin-top: 1.5rem; display: flex; flex-direction: column; gap: .6rem; }
+    .player-row {
+      display: flex; align-items: center; gap: .75rem;
+      background: var(--surface2); border: 1px solid var(--line);
+      border-radius: var(--r-sm); padding: .6rem .875rem;
+    }
+    .player-av {
+      width: 30px; height: 30px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .7rem; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .player-name { font-size: .875rem; font-weight: 600; flex: 1; }
+    .player-num { font-size: .75rem; color: var(--text-low); font-family: 'JetBrains Mono', monospace; }
+    .att-pill {
+      font-size: .65rem; font-weight: 700; padding: .2rem .55rem;
+      border-radius: 999px; flex-shrink: 0;
+    }
+    .att-present { background: rgba(48,194,110,.15); color: var(--success); }
+    .att-absent  { background: rgba(229,72,77,.15);  color: #E5484D; }
+    .att-late    { background: rgba(240,180,41,.15);  color: var(--warning); }
 
     /* ── PRICING ── */
     .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.25rem;
-      align-items: start;
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 1rem; align-items: start;
     }
+    @media (max-width: 768px) { .pricing-grid { grid-template-columns: 1fr; } }
 
     .pricing-card {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 2rem;
-      position: relative;
-      transition: all .3s;
-    }
-    .pricing-card.featured {
-      border-color: var(--brand);
-      background: linear-gradient(160deg, rgba(232,116,60,.06) 0%, var(--surface) 40%);
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: var(--r-xl); padding: 2rem;
+      position: relative; transition: transform .25s, border-color .25s;
     }
     .pricing-card:hover { transform: translateY(-4px); }
+    .pricing-card.pop {
+      border-color: var(--brand);
+      background: linear-gradient(160deg, rgba(232,116,60,.07) 0%, var(--surface) 50%);
+    }
 
-    .featured-badge {
-      position: absolute;
-      top: -12px; left: 50%;
-      transform: translateX(-50%);
-      background: var(--brand);
-      color: #fff;
-      font-size: .7rem;
-      font-weight: 700;
+    .pop-badge {
+      position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+      background: var(--brand); color: #fff;
+      font-size: .65rem; font-weight: 700;
       font-family: 'JetBrains Mono', monospace;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      padding: .3rem 1rem;
-      border-radius: 999px;
+      text-transform: uppercase; letter-spacing: .1em;
+      padding: .25rem .85rem; border-radius: 999px;
     }
 
-    .pricing-name {
-      font-size: .8rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      color: var(--text-low);
-      margin-bottom: .5rem;
+    .pc-tier {
+      font-size: .7rem; font-family: 'JetBrains Mono', monospace;
+      font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+      color: var(--text-low); margin-bottom: .5rem;
     }
-
-    .pricing-price {
-      font-size: 2.8rem;
-      font-weight: 900;
-      letter-spacing: -.04em;
-      line-height: 1;
-      margin-bottom: .25rem;
+    .pc-price {
+      font-size: 3rem; font-weight: 900; letter-spacing: -.05em; line-height: 1;
     }
-    .pricing-period { font-size: .9rem; color: var(--text-low); margin-bottom: 1.25rem; }
-
-    .pricing-divider {
-      height: 1px;
-      background: var(--line);
-      margin: 1.25rem 0;
+    .pc-price.grad {
+      background: linear-gradient(135deg, var(--brand), #f5a06a);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-
-    .pricing-features {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: .6rem;
+    .pc-period { font-size: .85rem; color: var(--text-low); margin-bottom: 1.5rem; }
+    .pc-divider { height: 1px; background: var(--line); margin: 1.25rem 0; }
+    .pc-list { list-style: none; display: flex; flex-direction: column; gap: .55rem; }
+    .pc-list li {
+      display: flex; align-items: center; gap: .5rem;
+      font-size: .875rem; color: var(--text-mid);
     }
-    .pricing-features li {
-      display: flex;
-      align-items: center;
-      gap: .5rem;
-      font-size: .9rem;
-      color: var(--text-mid);
-    }
-    .pricing-features .check { color: var(--success); font-size: .75rem; }
-    .pricing-features .cross { color: var(--text-low); font-size: .75rem; }
-
+    .li-check { color: var(--success); font-size: .7rem; font-weight: 700; }
+    .li-no    { color: var(--text-low); font-size: .7rem; }
     .btn-plan {
-      display: block;
-      text-align: center;
-      text-decoration: none;
-      margin-top: 1.5rem;
-      padding: .8rem;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: .95rem;
+      display: block; text-align: center; text-decoration: none;
+      margin-top: 1.5rem; padding: .75rem;
+      border-radius: var(--r-md); font-weight: 700; font-size: .9rem;
       transition: all .2s;
     }
-    .btn-plan.primary { background: var(--brand); color: #fff; }
-    .btn-plan.primary:hover { background: #f08040; }
-    .btn-plan.outline { background: transparent; color: var(--text-hi); border: 1px solid var(--line2); }
-    .btn-plan.outline:hover { background: var(--surface2); }
+    .btn-plan.fill { background: var(--brand); color: #fff; }
+    .btn-plan.fill:hover { background: var(--brand-light); }
+    .btn-plan.out  { background: transparent; color: var(--text-hi); border: 1px solid var(--line2); }
+    .btn-plan.out:hover { background: var(--surface2); }
 
-    /* ── TESTIMONIALS ── */
-    .testimonials-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.25rem;
-    }
-
-    .testimonial-card {
+    /* ── BILLING TOGGLE ── */
+    .billing-toggle {
+      display: inline-flex;
       background: var(--surface);
       border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 1.5rem;
+      border-radius: var(--r-md);
+      padding: 4px;
+      gap: 4px;
     }
-    .testimonial-stars {
-      color: var(--warning);
-      font-size: 1rem;
-      margin-bottom: .75rem;
-      letter-spacing: .1em;
+    .toggle-btn {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: transparent; border: none;
+      color: var(--text-low); font-size: .875rem; font-weight: 600;
+      padding: .45rem 1.1rem; border-radius: var(--r-sm);
+      cursor: pointer; transition: all .2s;
+      font-family: 'Inter', sans-serif;
     }
-    .testimonial-text {
-      font-size: .95rem;
-      color: var(--text-mid);
-      line-height: 1.65;
-      margin-bottom: 1rem;
+    .toggle-btn.active {
+      background: var(--surface2);
+      color: var(--text-hi);
+      box-shadow: 0 1px 3px rgba(0,0,0,.3);
     }
-    .testimonial-author {
-      display: flex;
-      align-items: center;
-      gap: .75rem;
+    .save-pill {
+      background: rgba(48,194,110,.15); color: var(--success);
+      font-size: .65rem; font-weight: 700; padding: .15rem .45rem;
+      border-radius: 999px; font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase; letter-spacing: .04em;
     }
-    .testimonial-avatar {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: .9rem;
-      font-weight: 700;
-      color: #fff;
-      flex-shrink: 0;
-    }
-    .testimonial-name { font-size: .9rem; font-weight: 600; }
-    .testimonial-role { font-size: .8rem; color: var(--text-low); }
 
-    /* ── CTA BANNER ── */
-    .cta-banner {
-      max-width: 100%;
-      background: linear-gradient(135deg, #1a0d06 0%, #1E222A 50%, #0e0a1a 100%);
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
+    /* ── TESTIMONIALS ── */
+    .testi-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem;
     }
-    .cta-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 6rem clamp(1.5rem, 5vw, 4rem);
+    @media (max-width: 768px) { .testi-grid { grid-template-columns: 1fr; } }
+
+    .testi-card {
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: var(--r-lg); padding: 1.5rem;
+    }
+    .testi-stars { color: var(--warning); font-size: .9rem; letter-spacing: .1em; margin-bottom: .75rem; }
+    .testi-q { font-size: .9rem; color: var(--text-mid); line-height: 1.65; margin-bottom: 1.1rem; }
+    .testi-author { display: flex; align-items: center; gap: .75rem; }
+    .testi-av {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .8rem; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .testi-name { font-size: .875rem; font-weight: 600; }
+    .testi-role { font-size: .75rem; color: var(--text-low); }
+
+    /* ── FINAL CTA ── */
+    .final-cta {
       text-align: center;
-      position: relative;
-      overflow: hidden;
+      background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(232,116,60,.12) 0%, transparent 70%);
+      border-top: 1px solid var(--line);
     }
-    .cta-inner::before {
-      content: '';
-      position: absolute;
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(232,116,60,.15) 0%, transparent 70%);
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
-    .cta-inner h2 {
+    .final-cta h2 {
       font-size: clamp(2rem, 5vw, 3.5rem);
-      font-weight: 900;
-      letter-spacing: -.04em;
-      line-height: 1.1;
-      margin-bottom: 1rem;
-      position: relative;
+      font-weight: 900; letter-spacing: -.05em; line-height: 1.1;
+      margin-bottom: .75rem;
     }
-    .cta-inner p {
-      color: var(--text-mid);
-      font-size: 1.1rem;
-      margin-bottom: 2.5rem;
-      position: relative;
-    }
-    .cta-inner .btn-primary { font-size: 1.15rem; padding: 1rem 2.5rem; }
+    .final-cta p { color: var(--text-mid); font-size: 1rem; margin-bottom: 2rem; }
 
     /* ── FOOTER ── */
     footer {
-      background: var(--surface);
-      border-top: 1px solid var(--line);
+      background: var(--surface); border-top: 1px solid var(--line);
       padding: 3rem clamp(1.5rem, 5vw, 4rem) 2rem;
     }
-    .footer-inner {
-      max-width: 1200px;
-      margin: 0 auto;
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-top {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem; margin-bottom: 2.5rem;
     }
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 2fr repeat(3, 1fr);
-      gap: 3rem;
-      margin-bottom: 3rem;
-    }
-    .footer-brand h3 {
-      font-size: 1.1rem;
-      font-weight: 800;
-      margin-bottom: .5rem;
-    }
-    .footer-brand p {
-      font-size: .875rem;
-      color: var(--text-low);
-      line-height: 1.6;
-      max-width: 260px;
-    }
+    @media (max-width: 700px) { .footer-top { grid-template-columns: 1fr 1fr; } }
+    .footer-brand-name { font-size: 1rem; font-weight: 800; margin-bottom: .4rem; }
+    .footer-brand-desc { font-size: .8rem; color: var(--text-low); line-height: 1.6; max-width: 220px; }
     .footer-col h4 {
-      font-size: .8rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      color: var(--text-low);
-      margin-bottom: 1rem;
+      font-size: .7rem; font-family: 'JetBrains Mono', monospace;
+      font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+      color: var(--text-low); margin-bottom: .875rem;
     }
-    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .6rem; }
-    .footer-col a {
-      text-decoration: none;
-      color: var(--text-mid);
-      font-size: .9rem;
-      transition: color .2s;
-    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+    .footer-col a { text-decoration: none; color: var(--text-mid); font-size: .875rem; transition: color .2s; }
     .footer-col a:hover { color: var(--text-hi); }
     .footer-bottom {
-      border-top: 1px solid var(--line);
-      padding-top: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: .85rem;
-      color: var(--text-low);
-      flex-wrap: wrap;
-      gap: 1rem;
+      border-top: 1px solid var(--line); padding-top: 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: .8rem; color: var(--text-low); flex-wrap: wrap; gap: .75rem;
     }
+    .footer-mono { font-family: 'JetBrains Mono', monospace; font-size: .7rem; }
 
-    /* ── SCROLL ANIMATIONS ── */
-    .fade-up {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity .6s ease, transform .6s ease;
+    /* ── SCROLL ANIM ── */
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity .55s ease, transform .55s ease;
     }
-    .fade-up.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 768px) {
-      .showcase { grid-template-columns: 1fr; }
-      .showcase.reverse { direction: ltr; }
-      .showcase-visual { order: -1; }
-      .footer-grid { grid-template-columns: 1fr 1fr; }
-      .nav-mobile-hide { display: none; }
-      .footer-brand { grid-column: span 2; }
-    }
-    @media (max-width: 480px) {
-      .footer-grid { grid-template-columns: 1fr; }
-      .footer-brand { grid-column: span 1; }
-    }
-
-    /* ── ANIMATED COUNTER ── */
-    .counter { display: inline-block; }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: .07s; }
+    .reveal-d2 { transition-delay: .14s; }
+    .reveal-d3 { transition-delay: .21s; }
+    .reveal-d4 { transition-delay: .28s; }
+    .reveal-d5 { transition-delay: .35s; }
+    .reveal-d6 { transition-delay: .42s; }
   </style>
 </head>
 <body>
 
-  <!-- ── NAVBAR ── -->
-  <nav>
-    <a href="#" class="nav-logo">
-      <div class="nav-logo-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-          <path d="M2 12h20"/>
-        </svg>
-      </div>
-      SportAtlas
+<div class="grid-bg"></div>
+
+<!-- ── NAV ── -->
+<nav id="nav">
+  <a href="#" class="nav-logo">
+    <div class="logo-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        <line x1="2" y1="12" x2="22" y2="12"/>
+      </svg>
+    </div>
+    SportAtlas
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how-it-works">How it works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <a href="https://sportatlas.app/webapp" class="btn-cta-sm">Open App →</a>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-glow"></div>
+
+  <div class="eyebrow reveal">
+    <span class="eyebrow-dot"></span>
+    AI-Powered · Multi-Sport · Free to Start
+  </div>
+
+  <h1 class="reveal reveal-d1">
+    Coach smarter.<br><span class="grad-text">Win more.</span>
+  </h1>
+
+  <p class="hero-sub reveal reveal-d2">
+    SportAtlas is the all-in-one platform for coaches and clubs — drill library, match analysis, team management, and an AI coach, built for every sport.
+  </p>
+
+  <div class="hero-btns reveal reveal-d3">
+    <a href="https://sportatlas.app/webapp" class="btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Start for free
     </a>
+    <a href="#features" class="btn-ghost">
+      See features
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+    </a>
+  </div>
 
-    <ul class="nav-links nav-mobile-hide">
-      <li><a href="#features">Features</a></li>
-      <li><a href="#showcase">How it works</a></li>
-      <li><a href="#pricing">Pricing</a></li>
-    </ul>
+  <div class="social-proof reveal reveal-d4">
+    <div class="avatars">
+      <div class="avatar-bubble" style="background:#B25A2C;">M</div>
+      <div class="avatar-bubble" style="background:#1b5e20;">S</div>
+      <div class="avatar-bubble" style="background:#0d47a1;">J</div>
+      <div class="avatar-bubble" style="background:#4a148c;">A</div>
+      <div class="avatar-bubble" style="background:#880e4f;">R</div>
+    </div>
+    <div>
+      <div class="stars-sm">★★★★★</div>
+      <div class="social-text"><strong>500+ coaches</strong> already using SportAtlas</div>
+    </div>
+  </div>
+</section>
 
-    <a href="https://sportatlas.app/webapp" class="btn-nav">Launch App →</a>
-  </nav>
+<!-- ── SPORTS TICKER ── -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <div class="tick-item"><span>🏀</span> Basketball</div>
+    <div class="tick-sep">·</div>
+    <div class="tick-item"><span>⚽</span> Soccer</div>
+    <div class="tick-sep">·</div>
+    <div class="tick-item"><span>🏈</span> American Football</div>
+    <div class="tick-sep">·</div>
+    <div class="tick-item"><span>🏐</span> Volleyball</div>
+    <div class="tick-sep">·</div>
+    <div class="tick-item"><span>🏉</span> Rugby</div>
+    <div class="tick-sep">·</div>
+    <div class="tick-item"><span>🎾</span> Tennis</div>
+    <div class="tick-sep">·</div>
+    <!-- duplicate for seamless loop -->
+    <div class="tick-item"><span>🏀</span> Basketball</div>
+    <div class="tick-sep">·</div>
+    <div class="tick-item"><span>⚽</span> Soccer</div>
+    <div class="tick-sep">·</div>
+    <div class="tick-item"><span>🏈</span> American Football</div>
+    <div class="tick-sep">·</div>
+    <div class="tick-item"><span>🏐</span> Volleyball</div>
+    <div class="tick-sep">·</div>
+    <div class="tick-item"><span>🏉</span> Rugby</div>
+    <div class="tick-sep">·</div>
+    <div class="tick-item"><span>🎾</span> Tennis</div>
+  </div>
+</div>
 
-  <!-- ── HERO ── -->
-  <div class="hero">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
+<!-- ── FEATURES ── -->
+<div class="section" id="features">
+  <div style="max-width:540px; margin-bottom:3rem;">
+    <div class="label reveal">Everything you need</div>
+    <h2 class="h2 reveal reveal-d1">One platform.<br>Every sport.</h2>
+    <p class="sub reveal reveal-d2" style="margin-top:.75rem;">From grassroots clubs to elite academies — SportAtlas has the tools to take your coaching further.</p>
+  </div>
 
-    <div class="hero-eyebrow">
-      <span class="eyebrow-dot"></span>
-      AI-Powered Coaching Platform
+  <div class="feat-grid">
+    <div class="feat-card reveal">
+      <span class="feat-icon">📋</span>
+      <h3>Drill Library</h3>
+      <p>Build and organise drills with court diagrams, video links and coaching notes. Filter by skill and level.</p>
+      <span class="feat-badge">Free</span>
+    </div>
+    <div class="feat-card reveal reveal-d1">
+      <span class="feat-icon">🤖</span>
+      <h3>AI Coach</h3>
+      <p>Powered by Gemini. Get instant drill suggestions, full practice plans, and tactical breakdowns in seconds.</p>
+      <span class="feat-badge">Pro</span>
+    </div>
+    <div class="feat-card reveal reveal-d2">
+      <span class="feat-icon">📊</span>
+      <h3>Match Analysis</h3>
+      <p>Live scoring, play-by-play tracking, and a public broadcast link so parents can follow along live.</p>
+      <span class="feat-badge">Pro</span>
+    </div>
+    <div class="feat-card reveal reveal-d3">
+      <span class="feat-icon">📅</span>
+      <h3>Training Sessions</h3>
+      <p>Assemble drills into a full structured session and share it with your squad in one tap.</p>
+      <span class="feat-badge">Free</span>
+    </div>
+    <div class="feat-card reveal reveal-d4">
+      <span class="feat-icon">👥</span>
+      <h3>Team Manager</h3>
+      <p>Rosters, attendance, team calendar, and a private chat for players, coaches, and parents.</p>
+      <span class="feat-badge">Pro</span>
+    </div>
+    <div class="feat-card reveal reveal-d5">
+      <span class="feat-icon">🏛️</span>
+      <h3>Club HQ</h3>
+      <p>Run multiple teams, manage coaches, build tournament brackets, and share a club-wide playbook.</p>
+      <span class="feat-badge">Club</span>
+    </div>
+    <div class="feat-card reveal">
+      <span class="feat-icon">💬</span>
+      <h3>Coach Hub</h3>
+      <p>Discover and share drills with a global community of coaches across all sports.</p>
+      <span class="feat-badge">Free</span>
+    </div>
+    <div class="feat-card reveal reveal-d1">
+      <span class="feat-icon">📍</span>
+      <h3>Local Courts</h3>
+      <p>Find basketball courts, pitches, and sport facilities near you on an interactive map.</p>
+      <span class="feat-badge">Free</span>
+    </div>
+    <div class="feat-card reveal reveal-d2">
+      <span class="feat-icon">🎬</span>
+      <h3>Content Studio</h3>
+      <p>Turn your playbook into shareable drill videos and social content — straight from the app.</p>
+      <span class="feat-badge">Pro</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── STATS ── -->
+<div class="stats-band">
+  <div class="stats-inner">
+    <div class="reveal">
+      <div class="stat-num"><span data-count="6">0</span>+</div>
+      <div class="stat-lbl">Sports supported</div>
+    </div>
+    <div class="reveal reveal-d1">
+      <div class="stat-num"><span data-count="1000">0</span>+</div>
+      <div class="stat-lbl">Community drills</div>
+    </div>
+    <div class="reveal reveal-d2">
+      <div class="stat-num"><span data-count="7">0</span></div>
+      <div class="stat-lbl">Age levels (U10–Adult)</div>
+    </div>
+    <div class="reveal reveal-d3">
+      <div class="stat-num">iOS &amp; Web</div>
+      <div class="stat-lbl">Platforms available</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── BENTO HOW IT WORKS ── -->
+<div class="section" id="how-it-works">
+  <div style="max-width:540px; margin-bottom:3rem;">
+    <div class="label reveal">How it works</div>
+    <h2 class="h2 reveal reveal-d1">See it in action.</h2>
+  </div>
+
+  <div class="bento">
+    <!-- Drill library -->
+    <div class="bento-cell tall reveal">
+      <div class="bento-label">Drill Library</div>
+      <div class="bento-title">Your entire playbook,<br>always with you</div>
+      <div class="bento-sub">Create drills once, access them everywhere. Filter by sport, skill, and level.</div>
+      <div class="drill-visual">
+        <div class="drill-item">
+          <div class="drill-num">01</div>
+          <div class="drill-info">
+            <div class="drill-name">3-Man Weave</div>
+            <div class="drill-meta">Passing · U16 · 8 min</div>
+          </div>
+          <span class="drill-badge badge-drib">Passing</span>
+        </div>
+        <div class="drill-item">
+          <div class="drill-num">02</div>
+          <div class="drill-info">
+            <div class="drill-name">Mikan Drill</div>
+            <div class="drill-meta">Shooting · U14 · 5 min</div>
+          </div>
+          <span class="drill-badge badge-shoot">Shooting</span>
+        </div>
+        <div class="drill-item">
+          <div class="drill-num">03</div>
+          <div class="drill-info">
+            <div class="drill-name">2-Ball Pound</div>
+            <div class="drill-meta">Ball handling · U12 · 6 min</div>
+          </div>
+          <span class="drill-badge badge-drib">Dribble</span>
+        </div>
+        <div class="drill-item">
+          <div class="drill-num">04</div>
+          <div class="drill-info">
+            <div class="drill-name">Closeout Drill</div>
+            <div class="drill-meta">Defense · U18 · 10 min</div>
+          </div>
+          <span class="drill-badge badge-def">Defense</span>
+        </div>
+        <div class="drill-item">
+          <div class="drill-num">05</div>
+          <div class="drill-info">
+            <div class="drill-name">Suicide Sprints</div>
+            <div class="drill-meta">Conditioning · Adult · 12 min</div>
+          </div>
+          <span class="drill-badge badge-cond">Cond.</span>
+        </div>
+      </div>
     </div>
 
-    <h1>
-      Build better athletes.<br>
-      <span class="accent">Coach smarter.</span>
-    </h1>
+    <!-- Match stats -->
+    <div class="bento-cell reveal reveal-d1">
+      <div class="bento-label">Match Analysis</div>
+      <div class="bento-title">Live stats, every possession</div>
+      <div class="bento-sub">Track and broadcast in real time.</div>
+      <div class="match-visual">
+        <div class="match-scoreboard">
+          <div class="match-team">
+            <div class="match-team-name">Home</div>
+            <div class="match-score score-home">54</div>
+          </div>
+          <div class="match-mid">
+            <div class="match-live"><div class="live-dot"></div>LIVE</div>
+            <div class="match-quarter">Q3 · 4:22</div>
+          </div>
+          <div class="match-team">
+            <div class="match-team-name">Away</div>
+            <div class="match-score score-away">49</div>
+          </div>
+        </div>
+        <div class="match-stats-row">
+          <div class="match-stat-box">
+            <div class="msb-val" style="color:var(--brand);">58%</div>
+            <div class="msb-lbl">FG%</div>
+          </div>
+          <div class="match-stat-box">
+            <div class="msb-val">34</div>
+            <div class="msb-lbl">Rebounds</div>
+          </div>
+          <div class="match-stat-box">
+            <div class="msb-val" style="color:var(--success);">12</div>
+            <div class="msb-lbl">Assists</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <p class="hero-sub">
-      SportAtlas gives coaches and clubs everything they need — drill libraries, match analysis, team management, and an AI coach — all in one powerful platform.
-    </p>
+    <!-- AI Coach -->
+    <div class="bento-cell reveal reveal-d2">
+      <div class="bento-label">AI Coach</div>
+      <div class="bento-title">Your coaching assistant, 24/7</div>
+      <div class="bento-sub">Ask anything. Get a drill, a plan, or a tactic.</div>
+      <div class="ai-visual">
+        <div>
+          <div class="chat-sender sender-you">You</div>
+          <div class="chat-bubble user">Give me 3 ball-handling drills for U14 players</div>
+        </div>
+        <div>
+          <div class="chat-sender sender-ai">AI Coach</div>
+          <div class="chat-bubble ai">
+            Here are 3 drills for U14 ball-handling:<br><br>
+            <strong>1.</strong> Figure-8 Dribble — 2 cones, 3×60s<br>
+            <strong>2.</strong> Two-Ball Pound — stationary, 4 sets<br>
+            <strong>3.</strong> Speed Dribble Circuit — 4 stations
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <div class="hero-cta">
-      <a href="https://sportatlas.app/webapp" class="btn-primary">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="5 3 19 12 5 21 5 3"/>
-        </svg>
-        Open the App
-      </a>
-      <a href="#features" class="btn-secondary">
-        See features
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M6 9l6 6 6-6"/>
-        </svg>
-      </a>
+    <!-- Team Manager -->
+    <div class="bento-cell wide reveal">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; align-items:start;">
+        <div>
+          <div class="bento-label">Team Manager</div>
+          <div class="bento-title">Know who's showing up before practice starts</div>
+          <div class="bento-sub">Track attendance, manage rosters, and keep your whole team on the same page with the built-in chat.</div>
+        </div>
+        <div class="team-visual">
+          <div class="player-row">
+            <div class="player-av" style="background:#B25A2C;">MV</div>
+            <div class="player-name">Marcus V.</div>
+            <div class="player-num">#12</div>
+            <span class="att-pill att-present">Present</span>
+          </div>
+          <div class="player-row">
+            <div class="player-av" style="background:#1b5e20;">SL</div>
+            <div class="player-name">Sophie L.</div>
+            <div class="player-num">#7</div>
+            <span class="att-pill att-present">Present</span>
+          </div>
+          <div class="player-row">
+            <div class="player-av" style="background:#0d47a1;">JD</div>
+            <div class="player-name">Jan D.</div>
+            <div class="player-num">#4</div>
+            <span class="att-pill att-late">Late</span>
+          </div>
+          <div class="player-row">
+            <div class="player-av" style="background:#880e4f;">AR</div>
+            <div class="player-name">Anna R.</div>
+            <div class="player-num">#21</div>
+            <span class="att-pill att-absent">Absent</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PRICING ── -->
+<div class="section" id="pricing">
+  <div style="text-align:center; max-width:500px; margin:0 auto 2.5rem;">
+    <div class="label reveal">Pricing</div>
+    <h2 class="h2 reveal reveal-d1">Start free. Scale with your team.</h2>
+    <p class="sub reveal reveal-d2" style="margin:.75rem auto 0;">No credit card needed to get started.</p>
+  </div>
+
+  <!-- Toggle -->
+  <div style="display:flex; justify-content:center; margin-bottom:2.5rem;" class="reveal reveal-d3">
+    <div class="billing-toggle">
+      <button class="toggle-btn active" id="btn-monthly" onclick="setBilling('monthly')">Monthly</button>
+      <button class="toggle-btn" id="btn-yearly" onclick="setBilling('yearly')">
+        Yearly
+        <span class="save-pill">Save 17%</span>
+      </button>
     </div>
   </div>
 
-  <!-- ── SPORTS STRIP ── -->
-  <div class="sports-strip">
-    <div class="sports-scroll-wrap">
-      <div class="sports-scroll">
-        <!-- doubled for seamless loop -->
-        <div class="sport-chip"><span>🏀</span> Basketball</div>
-        <div class="sport-chip"><span>⚽</span> Soccer</div>
-        <div class="sport-chip"><span>🏈</span> American Football</div>
-        <div class="sport-chip"><span>🏐</span> Volleyball</div>
-        <div class="sport-chip"><span>🏉</span> Rugby</div>
-        <div class="sport-chip"><span>🎾</span> Tennis</div>
-        <div class="sport-chip"><span>🏀</span> Basketball</div>
-        <div class="sport-chip"><span>⚽</span> Soccer</div>
-        <div class="sport-chip"><span>🏈</span> American Football</div>
-        <div class="sport-chip"><span>🏐</span> Volleyball</div>
-        <div class="sport-chip"><span>🏉</span> Rugby</div>
-        <div class="sport-chip"><span>🎾</span> Tennis</div>
-        <div class="sport-chip"><span>🏀</span> Basketball</div>
-        <div class="sport-chip"><span>⚽</span> Soccer</div>
-        <div class="sport-chip"><span>🏈</span> American Football</div>
-        <div class="sport-chip"><span>🏐</span> Volleyball</div>
-        <div class="sport-chip"><span>🏉</span> Rugby</div>
-        <div class="sport-chip"><span>🎾</span> Tennis</div>
+  <div class="pricing-grid">
+    <!-- Free -->
+    <div class="pricing-card reveal">
+      <div class="pc-tier">Free</div>
+      <div class="pc-price">€0</div>
+      <div class="pc-period">Forever free</div>
+      <div class="pc-divider"></div>
+      <ul class="pc-list">
+        <li><span class="li-check">✓</span> Drill library (view)</li>
+        <li><span class="li-check">✓</span> 3 custom drills</li>
+        <li><span class="li-check">✓</span> Training sessions</li>
+        <li><span class="li-check">✓</span> Coach Hub community</li>
+        <li><span class="li-check">✓</span> Local courts map</li>
+        <li><span class="li-no">—</span> AI Coach</li>
+        <li><span class="li-no">—</span> Match analysis</li>
+        <li><span class="li-no">—</span> Team management</li>
+      </ul>
+      <a href="https://sportatlas.app/webapp" class="btn-plan out">Get started free</a>
+    </div>
+
+    <!-- Basic -->
+    <div class="pricing-card reveal reveal-d1">
+      <div class="pc-tier">Basic</div>
+      <div class="pc-price">
+        <span class="price-monthly">€9<span style="font-size:1.5rem; font-weight:700;">.99</span></span>
+        <span class="price-yearly" style="display:none;">€99<span style="font-size:1.5rem; font-weight:700;">.99</span></span>
+      </div>
+      <div class="pc-period">
+        <span class="period-monthly">per month</span>
+        <span class="period-yearly" style="display:none;">per year · <span style="color:var(--success);">2 months free</span></span>
+      </div>
+      <div class="pc-divider"></div>
+      <ul class="pc-list">
+        <li><span class="li-check">✓</span> Unlimited drills</li>
+        <li><span class="li-check">✓</span> Training sessions</li>
+        <li><span class="li-check">✓</span> Team management (1 team)</li>
+        <li><span class="li-check">✓</span> Coach Hub community</li>
+        <li><span class="li-check">✓</span> Local courts map</li>
+        <li><span class="li-no">—</span> AI Coach</li>
+        <li><span class="li-no">—</span> Match analysis</li>
+        <li><span class="li-no">—</span> Match broadcaster</li>
+      </ul>
+      <a href="https://sportatlas.app/webapp" class="btn-plan out">Start Basic</a>
+    </div>
+
+    <!-- Pro -->
+    <div class="pricing-card pop reveal reveal-d2">
+      <div class="pop-badge">Most Popular</div>
+      <div class="pc-tier">Pro</div>
+      <div class="pc-price grad">
+        <span class="price-monthly">€14<span style="font-size:1.5rem; font-weight:700;">.99</span></span>
+        <span class="price-yearly" style="display:none;">€149<span style="font-size:1.5rem; font-weight:700;">.99</span></span>
+      </div>
+      <div class="pc-period">
+        <span class="period-monthly">per month</span>
+        <span class="period-yearly" style="display:none;">per year · <span style="color:var(--success);">2 months free</span></span>
+      </div>
+      <div class="pc-divider"></div>
+      <ul class="pc-list">
+        <li><span class="li-check">✓</span> Everything in Basic</li>
+        <li><span class="li-check">✓</span> AI Coach</li>
+        <li><span class="li-check">✓</span> Match analysis & live stats</li>
+        <li><span class="li-check">✓</span> Match broadcaster</li>
+        <li><span class="li-check">✓</span> Content Studio</li>
+        <li><span class="li-check">✓</span> Scrimmage Hub</li>
+        <li><span class="li-check">✓</span> Multiple teams</li>
+        <li><span class="li-check">✓</span> Priority support</li>
+      </ul>
+      <a href="https://sportatlas.app/webapp" class="btn-plan fill">Start Pro</a>
+    </div>
+  </div>
+</div>
+
+<!-- ── TESTIMONIALS ── -->
+<div class="section">
+  <div style="margin-bottom:2.5rem;">
+    <div class="label reveal">Coaches love it</div>
+    <h2 class="h2 reveal reveal-d1">Trusted by coaches worldwide</h2>
+  </div>
+
+  <div class="testi-grid">
+    <div class="testi-card reveal">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-q">"Finally a coaching app that does everything. I use it to plan practices, track live game stats, and share drills with my assistant coaches. Absolute game changer."</p>
+      <div class="testi-author">
+        <div class="testi-av" style="background:#B25A2C;">MV</div>
+        <div>
+          <div class="testi-name">Marc V.</div>
+          <div class="testi-role">U16 Basketball Coach</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal reveal-d1">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-q">"The AI coach suggested drills I never would've thought of. My players' ball handling improved noticeably in just two weeks of AI-suggested sessions."</p>
+      <div class="testi-author">
+        <div class="testi-av" style="background:#1b5e20;">SL</div>
+        <div>
+          <div class="testi-name">Sophie L.</div>
+          <div class="testi-role">Youth Soccer Coach</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal reveal-d2">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-q">"Club HQ makes managing 6 teams a breeze. Shared drill library, tournament brackets — it saved us hours of spreadsheet work every single week."</p>
+      <div class="testi-author">
+        <div class="testi-av" style="background:#0d47a1;">JD</div>
+        <div>
+          <div class="testi-name">Jan D.</div>
+          <div class="testi-role">Sports Club Director</div>
+        </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- ── FEATURES ── -->
-  <section id="features">
-    <div class="fade-up">
-      <div class="section-label">Everything you need</div>
-      <h2 class="section-title">One platform.<br>Every sport.</h2>
-      <p class="section-sub">From grassroots clubs to elite academies, SportAtlas has the tools to take your coaching to the next level.</p>
-    </div>
-
-    <div class="features-grid">
-      <div class="feature-card fade-up" style="transition-delay:.05s">
-        <div class="feature-icon">📋</div>
-        <h3>Drill Library</h3>
-        <p>Create, save, and share drills with detailed diagrams, video links, and coaching notes. Filter by skill focus and level.</p>
-        <span class="feature-tag">Free</span>
-      </div>
-
-      <div class="feature-card fade-up" style="transition-delay:.1s">
-        <div class="feature-icon">🤖</div>
-        <h3>AI Coach</h3>
-        <p>Get instant drill suggestions, practice plans, and tactical advice from an AI trained on coaching best practices.</p>
-        <span class="feature-tag">Pro</span>
-      </div>
-
-      <div class="feature-card fade-up" style="transition-delay:.15s">
-        <div class="feature-icon">📊</div>
-        <h3>Match Analysis</h3>
-        <p>Track live stats, upload game footage, and broadcast matches to your team with real-time commentary tools.</p>
-        <span class="feature-tag">Pro</span>
-      </div>
-
-      <div class="feature-card fade-up" style="transition-delay:.2s">
-        <div class="feature-icon">📅</div>
-        <h3>Training Sessions</h3>
-        <p>Build complete training sessions by assembling drills into a structured plan. Share directly with your squad.</p>
-        <span class="feature-tag">Free</span>
-      </div>
-
-      <div class="feature-card fade-up" style="transition-delay:.25s">
-        <div class="feature-icon">👥</div>
-        <h3>Team Manager</h3>
-        <p>Manage rosters, track attendance, schedule events, and communicate with players and parents in one place.</p>
-        <span class="feature-tag">Pro</span>
-      </div>
-
-      <div class="feature-card fade-up" style="transition-delay:.3s">
-        <div class="feature-icon">🏛️</div>
-        <h3>Club HQ</h3>
-        <p>Run your entire club — multiple teams, coaches, tournament brackets, and shared playbooks — from a single dashboard.</p>
-        <span class="feature-tag">Club</span>
-      </div>
-
-      <div class="feature-card fade-up" style="transition-delay:.35s">
-        <div class="feature-icon">💬</div>
-        <h3>Coach Hub</h3>
-        <p>Connect with coaches worldwide. Share drills, discuss tactics, and discover community-created playbooks.</p>
-        <span class="feature-tag">Free</span>
-      </div>
-
-      <div class="feature-card fade-up" style="transition-delay:.4s">
-        <div class="feature-icon">📍</div>
-        <h3>Local Courts</h3>
-        <p>Find basketball courts, soccer fields, and sport facilities near you on an interactive map.</p>
-        <span class="feature-tag">Free</span>
-      </div>
-
-      <div class="feature-card fade-up" style="transition-delay:.45s">
-        <div class="feature-icon">🎬</div>
-        <h3>Content Studio</h3>
-        <p>Create shareable drill videos and social media content from your playbook — straight from the app.</p>
-        <span class="feature-tag">Pro</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── STATS ── -->
-  <div class="stats-section">
-    <div class="stats-inner">
-      <div class="fade-up">
-        <div class="stat-num"><span class="counter" data-target="6">0</span>+</div>
-        <div class="stat-label">Sports supported</div>
-      </div>
-      <div class="fade-up" style="transition-delay:.1s">
-        <div class="stat-num"><span class="counter" data-target="1000">0</span>+</div>
-        <div class="stat-label">Drills in the community</div>
-      </div>
-      <div class="fade-up" style="transition-delay:.2s">
-        <div class="stat-num"><span class="counter" data-target="7">0</span></div>
-        <div class="stat-label">Skill levels covered</div>
-      </div>
-      <div class="fade-up" style="transition-delay:.3s">
-        <div class="stat-num">iOS &amp; Web</div>
-        <div class="stat-label">Available on all platforms</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── SHOWCASE 1: DRILL BUILDER ── -->
-  <section id="showcase">
-    <div class="showcase fade-up">
-      <div class="showcase-visual">
-        <div class="mock-screen">
-          <div class="mock-bar brand"></div>
-          <div class="mock-bar short"></div>
-          <div style="flex:1; background: #0a2010; border-radius:8px; position:relative; overflow:hidden;">
-            <div class="mock-court">
-              <!-- players -->
-              <div class="court-dot home" style="top:30%; left:30%;"></div>
-              <div class="court-dot home" style="top:30%; right:30%;"></div>
-              <div class="court-dot home" style="bottom:35%; left:50%;"></div>
-              <div class="court-dot away" style="top:40%; left:50%;"></div>
-              <div class="court-dot away" style="bottom:40%; left:35%;"></div>
-              <!-- arrows -->
-              <div class="court-arrow" style="top:31%; left:33%; transform: rotate(15deg);"></div>
-              <div class="court-arrow" style="top:42%; right:38%; transform: rotate(-30deg);"></div>
-            </div>
-          </div>
-          <div class="mock-bar shorter"></div>
-        </div>
-      </div>
-      <div class="showcase-text">
-        <div class="section-label">Drill Designer</div>
-        <h2>Design plays on a real court diagram</h2>
-        <p>Draw movements, passes, and screens directly on interactive court visuals. Supports half-court, full-court, and sport-specific fields for all 6 sports.</p>
-        <ul class="check-list">
-          <li>Animated player movements</li>
-          <li>Pass, run, screen & dribble lines</li>
-          <li>Basketball, soccer, rugby & more</li>
-          <li>Share as image or PDF</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── SHOWCASE 2: MATCH ANALYSIS ── -->
-  <section>
-    <div class="showcase reverse fade-up">
-      <div class="showcase-visual">
-        <div class="mock-screen">
-          <div style="display:flex; gap:.5rem; align-items:center; margin-bottom:.5rem;">
-            <div class="mock-bar brand" style="width:20%; height:8px;"></div>
-            <div style="margin-left:auto; width:8px; height:8px; border-radius:50%; background: #E5484D; animation: pulse-dot 1s infinite;"></div>
-            <span style="font-size:.5rem; font-family:'JetBrains Mono',monospace; color:#E5484D; font-weight:700;">LIVE</span>
-          </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:.5rem; flex:1;">
-            <div style="background:var(--line); border-radius:8px; padding:.75rem; display:flex; flex-direction:column; gap:.3rem;">
-              <div style="font-size:.5rem; font-family:'JetBrains Mono',monospace; color:var(--text-low); font-weight:700; text-transform:uppercase;">HOME</div>
-              <div style="font-size:1.5rem; font-weight:900; color:var(--brand); line-height:1;">42</div>
-              <div style="height:3px; background:var(--brand); border-radius:2px; width:70%;"></div>
-            </div>
-            <div style="background:var(--line); border-radius:8px; padding:.75rem; display:flex; flex-direction:column; gap:.3rem;">
-              <div style="font-size:.5rem; font-family:'JetBrains Mono',monospace; color:var(--text-low); font-weight:700; text-transform:uppercase;">AWAY</div>
-              <div style="font-size:1.5rem; font-weight:900; color:var(--info); line-height:1;">38</div>
-              <div style="height:3px; background:var(--info); border-radius:2px; width:55%;"></div>
-            </div>
-          </div>
-          <div style="display:flex; flex-direction:column; gap:.35rem;">
-            <div style="height:6px; background:var(--line); border-radius:4px;"></div>
-            <div style="height:6px; background:var(--line); border-radius:4px; width:80%;"></div>
-            <div style="height:6px; background:var(--line); border-radius:4px; width:60%;"></div>
-          </div>
-        </div>
-      </div>
-      <div class="showcase-text">
-        <div class="section-label">Match Analysis</div>
-        <h2>Live stats. Real-time insights.</h2>
-        <p>Track every basket, goal, and event live during a game. Broadcast the scoreboard to parents and fans with a shareable link — no app required on their end.</p>
-        <ul class="check-list">
-          <li>Live scoring & play tracking</li>
-          <li>Public viewer link for fans</li>
-          <li>Post-game video upload & review</li>
-          <li>Match archive for season history</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── SHOWCASE 3: AI COACH ── -->
-  <section>
-    <div class="showcase fade-up">
-      <div class="showcase-visual">
-        <div class="mock-screen">
-          <div style="display:flex; align-items:center; gap:.5rem; margin-bottom:.75rem;">
-            <div style="width:24px;height:24px;border-radius:6px;background:var(--brand);display:flex;align-items:center;justify-content:center;font-size:.65rem;">🤖</div>
-            <div style="font-size:.6rem;font-family:'JetBrains Mono',monospace;color:var(--brand);font-weight:700;">AI COACH</div>
-          </div>
-          <div style="background:var(--line);border-radius:8px;padding:.75rem;margin-bottom:.5rem;">
-            <div style="font-size:.55rem;color:var(--text-low);margin-bottom:.35rem;">You</div>
-            <div style="font-size:.65rem;color:var(--text-hi);line-height:1.5;">"Give me 3 drills for improving ball-handling for U14 players"</div>
-          </div>
-          <div style="background:rgba(232,116,60,.08);border:1px solid rgba(232,116,60,.2);border-radius:8px;padding:.75rem;flex:1;">
-            <div style="font-size:.55rem;color:var(--brand);margin-bottom:.35rem;font-weight:700;">AI Coach</div>
-            <div style="font-size:.6rem;color:var(--text-mid);line-height:1.6;">
-              Here are 3 drills tailored for U14 ball-handling:<br/><br/>
-              <span style="color:var(--brand);font-weight:700;">1.</span> Figure-8 Dribble — 2 cones, 3 sets<br/>
-              <span style="color:var(--brand);font-weight:700;">2.</span> Two-Ball Pound — wall drill, 60s<br/>
-              <span style="color:var(--brand);font-weight:700;">3.</span> Speed Dribble Circuit — 4 stations
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="showcase-text">
-        <div class="section-label">AI Coach</div>
-        <h2>Your personal coaching assistant, 24/7</h2>
-        <p>Powered by Google Gemini, the AI Coach understands your sport, your level, and your players. Get custom drill suggestions, full practice plans, and tactical breakdowns in seconds.</p>
-        <ul class="check-list">
-          <li>Custom drill generation</li>
-          <li>Full training session plans</li>
-          <li>Tactical Q&A for any sport</li>
-          <li>Saves suggestions to your library</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── PRICING ── -->
-  <section id="pricing">
-    <div class="fade-up" style="text-align:center; max-width:600px; margin:0 auto 3rem;">
-      <div class="section-label">Pricing</div>
-      <h2 class="section-title">Start free. Scale with your team.</h2>
-      <p class="section-sub" style="margin:0 auto;">No credit card needed. Upgrade anytime.</p>
-    </div>
-
-    <div class="pricing-grid">
-      <!-- Free -->
-      <div class="pricing-card fade-up">
-        <div class="pricing-name">Free</div>
-        <div class="pricing-price">€0</div>
-        <div class="pricing-period">Forever free</div>
-        <div class="pricing-divider"></div>
-        <ul class="pricing-features">
-          <li><span class="check">✓</span> Drill library (view)</li>
-          <li><span class="check">✓</span> 3 custom drills</li>
-          <li><span class="check">✓</span> Training sessions (basic)</li>
-          <li><span class="check">✓</span> Local courts map</li>
-          <li><span class="check">✓</span> Coach Hub community</li>
-          <li><span class="cross">—</span> AI Coach</li>
-          <li><span class="cross">—</span> Match analysis</li>
-          <li><span class="cross">—</span> Team management</li>
-        </ul>
-        <a href="https://sportatlas.app/webapp" class="btn-plan outline">Get started free</a>
-      </div>
-
-      <!-- Pro -->
-      <div class="pricing-card featured fade-up" style="transition-delay:.1s">
-        <div class="featured-badge">Most Popular</div>
-        <div class="pricing-name">Pro</div>
-        <div class="pricing-price" style="background:linear-gradient(135deg,var(--brand),#f0a060);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">€9</div>
-        <div class="pricing-period">per month</div>
-        <div class="pricing-divider"></div>
-        <ul class="pricing-features">
-          <li><span class="check">✓</span> Unlimited drills</li>
-          <li><span class="check">✓</span> AI Coach</li>
-          <li><span class="check">✓</span> Match analysis & stats</li>
-          <li><span class="check">✓</span> Team management</li>
-          <li><span class="check">✓</span> Scrimmage Hub</li>
-          <li><span class="check">✓</span> Content Studio</li>
-          <li><span class="check">✓</span> Match broadcaster</li>
-          <li><span class="cross">—</span> Multi-team club tools</li>
-        </ul>
-        <a href="https://sportatlas.app/webapp" class="btn-plan primary">Start Pro</a>
-      </div>
-
-      <!-- Club -->
-      <div class="pricing-card fade-up" style="transition-delay:.2s">
-        <div class="pricing-name">Club</div>
-        <div class="pricing-price">€29</div>
-        <div class="pricing-period">per month</div>
-        <div class="pricing-divider"></div>
-        <ul class="pricing-features">
-          <li><span class="check">✓</span> Everything in Pro</li>
-          <li><span class="check">✓</span> Multiple teams</li>
-          <li><span class="check">✓</span> Club HQ dashboard</li>
-          <li><span class="check">✓</span> Tournament builder</li>
-          <li><span class="check">✓</span> Shared club playbook</li>
-          <li><span class="check">✓</span> Multiple coaches</li>
-          <li><span class="check">✓</span> Priority support</li>
-          <li><span class="check">✓</span> Club analytics</li>
-        </ul>
-        <a href="https://sportatlas.app/webapp" class="btn-plan outline">Start Club</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── TESTIMONIALS ── -->
-  <section>
-    <div class="fade-up" style="margin-bottom:2.5rem;">
-      <div class="section-label">Coaches love it</div>
-      <h2 class="section-title">Trusted by coaches worldwide</h2>
-    </div>
-
-    <div class="testimonials-grid">
-      <div class="testimonial-card fade-up">
-        <div class="testimonial-stars">★★★★★</div>
-        <p class="testimonial-text">"Finally a coaching app that does everything. I use it to plan practices, track stats live during games, and share drills with my assistant coaches. Game changer."</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar" style="background:#B25A2C;">MV</div>
-          <div>
-            <div class="testimonial-name">Marc V.</div>
-            <div class="testimonial-role">U16 Basketball Coach</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="testimonial-card fade-up" style="transition-delay:.1s">
-        <div class="testimonial-stars">★★★★★</div>
-        <p class="testimonial-text">"The AI coach suggested drills I never would have thought of. My players' ball handling improved noticeably in just two weeks of using the AI-suggested sessions."</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar" style="background:#1b5e20;">SL</div>
-          <div>
-            <div class="testimonial-name">Sophie L.</div>
-            <div class="testimonial-role">Youth Soccer Coach</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="testimonial-card fade-up" style="transition-delay:.2s">
-        <div class="testimonial-stars">★★★★★</div>
-        <p class="testimonial-text">"Club HQ makes managing 6 teams a breeze. All coaches share a common drill library and the tournament bracket tool saved us hours of spreadsheet work."</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar" style="background:#0d47a1;">JD</div>
-          <div>
-            <div class="testimonial-name">Jan D.</div>
-            <div class="testimonial-role">Sports Club Director</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── CTA BANNER ── -->
-  <div class="cta-banner">
-    <div class="cta-inner fade-up">
-      <h2>Ready to coach<br><span style="background:linear-gradient(135deg,var(--brand),#f0a060);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">at a higher level?</span></h2>
-      <p>Join thousands of coaches already using SportAtlas. Free to start — no credit card required.</p>
-      <a href="https://sportatlas.app/webapp" class="btn-primary" style="font-size:1.15rem; padding:1rem 2.5rem;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="5 3 19 12 5 21 5 3"/>
-        </svg>
+<!-- ── FINAL CTA ── -->
+<div class="final-cta section-full">
+  <div class="section" style="padding-top:5rem; padding-bottom:5rem;">
+    <div class="reveal">
+      <h2>Ready to coach<br><span class="grad-text">at a higher level?</span></h2>
+      <p>Join coaches already using SportAtlas. Free to start — no credit card required.</p>
+      <a href="https://sportatlas.app/webapp" class="btn-primary" style="font-size:1.05rem; padding:.9rem 2.25rem; display:inline-flex;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         Open SportAtlas
       </a>
     </div>
   </div>
+</div>
 
-  <!-- ── FOOTER ── -->
-  <footer>
-    <div class="footer-inner">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <h3>SportAtlas</h3>
-          <p>AI-powered coaching platform for every sport. Build better athletes, run better teams.</p>
-        </div>
-
-        <div class="footer-col">
-          <h4>Product</h4>
-          <ul>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#pricing">Pricing</a></li>
-            <li><a href="https://sportatlas.app/webapp">Web App</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h4>Sports</h4>
-          <ul>
-            <li><a href="https://sportatlas.app/webapp">Basketball</a></li>
-            <li><a href="https://sportatlas.app/webapp">Soccer</a></li>
-            <li><a href="https://sportatlas.app/webapp">Volleyball</a></li>
-            <li><a href="https://sportatlas.app/webapp">Rugby</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h4>Company</h4>
-          <ul>
-            <li><a href="https://sportatlas.app/webapp">About</a></li>
-            <li><a href="https://sportatlas.app/webapp">Privacy Policy</a></li>
-            <li><a href="https://sportatlas.app/webapp">Terms</a></li>
-            <li><a href="https://sportatlas.app/webapp">Support</a></li>
-          </ul>
-        </div>
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-name">SportAtlas</div>
+        <div class="footer-brand-desc">AI-powered coaching platform for every sport. Build better athletes, run better teams.</div>
       </div>
-
-      <div class="footer-bottom">
-        <span>© 2026 SportAtlas. All rights reserved.</span>
-        <span style="font-family:'JetBrains Mono',monospace; font-size:.75rem; color:var(--text-low);">Built for coaches. By coaches.</span>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="https://sportatlas.app/webapp">Web App</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Sports</h4>
+        <ul>
+          <li><a href="https://sportatlas.app/webapp">Basketball</a></li>
+          <li><a href="https://sportatlas.app/webapp">Soccer</a></li>
+          <li><a href="https://sportatlas.app/webapp">Volleyball</a></li>
+          <li><a href="https://sportatlas.app/webapp">Rugby</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="https://sportatlas.app/webapp">About</a></li>
+          <li><a href="https://sportatlas.app/webapp">Privacy</a></li>
+          <li><a href="https://sportatlas.app/webapp">Terms</a></li>
+          <li><a href="https://sportatlas.app/webapp">Support</a></li>
+        </ul>
       </div>
     </div>
-  </footer>
+    <div class="footer-bottom">
+      <span>© 2026 SportAtlas. All rights reserved.</span>
+      <span class="footer-mono" style="color:var(--text-low);">Built for coaches. By coaches.</span>
+    </div>
+  </div>
+</footer>
 
-  <script>
-    // ── Scroll animations ──
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          observer.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+<script>
+  // Reveal on scroll
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  // Animated counters
+  const counterIO = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const target = +el.dataset.count;
+      const dur = 1100;
+      const start = performance.now();
+      const tick = now => {
+        const p = Math.min((now - start) / dur, 1);
+        const ease = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(ease * target).toLocaleString();
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      counterIO.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('[data-count]').forEach(el => counterIO.observe(el));
 
-    // ── Animated counters ──
-    const counterObserver = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (!e.isIntersecting) return;
-        const el = e.target;
-        const target = +el.dataset.target;
-        const duration = 1200;
-        const start = performance.now();
-        const tick = (now) => {
-          const progress = Math.min((now - start) / duration, 1);
-          const ease = 1 - Math.pow(1 - progress, 3);
-          el.textContent = Math.round(ease * target).toLocaleString();
-          if (progress < 1) requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
-        counterObserver.unobserve(el);
-      });
-    }, { threshold: 0.5 });
+  // Billing toggle
+  function setBilling(mode) {
+    const isYearly = mode === 'yearly';
+    document.getElementById('btn-monthly').classList.toggle('active', !isYearly);
+    document.getElementById('btn-yearly').classList.toggle('active', isYearly);
+    document.querySelectorAll('.price-monthly, .period-monthly').forEach(el => el.style.display = isYearly ? 'none' : '');
+    document.querySelectorAll('.price-yearly, .period-yearly').forEach(el => el.style.display = isYearly ? '' : 'none');
+  }
 
-    document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
-
-    // ── Smooth nav hide on scroll ──
-    let lastY = 0;
-    const nav = document.querySelector('nav');
-    window.addEventListener('scroll', () => {
-      const y = window.scrollY;
-      if (y > 80 && y > lastY) {
-        nav.style.transform = 'translateY(-100%)';
-        nav.style.transition = 'transform .3s ease';
-      } else {
-        nav.style.transform = 'translateY(0)';
-      }
-      lastY = y;
-    }, { passive: true });
-  </script>
+  // Nav hide on scroll down
+  let lastY = 0;
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    nav.style.transform = (y > 80 && y > lastY) ? 'translateY(-100%)' : 'translateY(0)';
+    nav.style.transition = 'transform .3s ease';
+    lastY = y;
+  }, { passive: true });
+</script>
 </body>
 </html>
