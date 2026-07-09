@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — SportAtlas</title>
+  <meta name="theme-color" content="#0B0D10" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0B0D10; --surface: #13161B; --surface2: #1A1E26;
+      --line: #252B36; --line2: #323A48;
+      --text-hi: #F0F2F5; --text-mid: #9AA3B2; --text-low: #5C6370;
+      --brand: #E8743C; --brand-soft: rgba(232,116,60,.1);
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text-hi); font-family: 'Inter', sans-serif; line-height: 1.6; }
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(1.5rem, 5vw, 5rem); height: 60px;
+      background: rgba(11,13,16,.9); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-logo { display: flex; align-items: center; gap: .55rem; text-decoration: none; color: var(--text-hi); font-weight: 800; font-size: 1rem; }
+    .logo-box { width: 30px; height: 30px; border-radius: 7px; background: var(--brand); display: flex; align-items: center; justify-content: center; }
+    .btn-nav { background: var(--brand); color: #fff; border: none; padding: .45rem 1.1rem; border-radius: 8px; font-size: .875rem; font-weight: 600; cursor: pointer; text-decoration: none; }
+    .btn-nav:hover { background: #f09060; }
+    main { max-width: 760px; margin: 0 auto; padding: 8rem clamp(1.5rem, 5vw, 2rem) 6rem; }
+    .back { display: inline-flex; align-items: center; gap: .4rem; text-decoration: none; color: var(--text-low); font-size: .875rem; font-weight: 500; margin-bottom: 2.5rem; transition: color .2s; }
+    .back:hover { color: var(--text-hi); }
+    .label { font-family: 'JetBrains Mono', monospace; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: var(--brand); margin-bottom: .6rem; }
+    h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 900; letter-spacing: -.04em; line-height: 1.1; margin-bottom: 1.5rem; }
+    .lead { font-size: 1.1rem; color: var(--text-mid); line-height: 1.7; margin-bottom: 2.5rem; }
+    .divider { height: 1px; background: var(--line); margin: 2.5rem 0; }
+    h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: .75rem; }
+    p { color: var(--text-mid); line-height: 1.75; margin-bottom: 1rem; }
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 2rem; margin-bottom: 1rem; }
+    .card h3 { font-size: 1rem; font-weight: 700; margin-bottom: .3rem; }
+    .card p { margin: 0; font-size: .9rem; }
+    footer { text-align: center; padding: 2rem; color: var(--text-low); font-size: .8rem; border-top: 1px solid var(--line); }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="logo-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><line x1="2" y1="12" x2="22" y2="12"/>
+      </svg>
+    </div>
+    SportAtlas
+  </a>
+  <a href="https://sportatlas.app/webapp" class="btn-nav">Open App →</a>
+</nav>
+
+<main>
+  <a href="index.html" class="back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5"/><path d="M12 5l-7 7 7 7"/></svg>
+    Back
+  </a>
+  <div class="label">About us</div>
+  <h1>Built for coaches,<br>by coaches.</h1>
+  <p class="lead">SportAtlas started with a simple idea: coaches deserve better tools. We built the platform we always wished existed — one place for every drill, every team, every game.</p>
+
+  <div class="divider"></div>
+
+  <h2>Our mission</h2>
+  <p>We believe great coaching changes lives. SportAtlas gives every coach — from grassroots youth clubs to elite academies — the tools to plan smarter, analyse deeper, and build better athletes.</p>
+  <p>We support 6 sports and every level from U10 to Adult, with AI-powered features that make advanced coaching accessible to everyone.</p>
+
+  <div class="divider"></div>
+
+  <h2>What we build</h2>
+  <div class="card">
+    <h3>📋 Drill Library</h3>
+    <p>A searchable library of drills with interactive court diagrams, video links, and coaching notes — yours to build and share.</p>
+  </div>
+  <div class="card">
+    <h3>🤖 AI Coach</h3>
+    <p>An AI assistant trained on coaching best practices that generates drills, plans sessions, and answers tactical questions in seconds.</p>
+  </div>
+  <div class="card">
+    <h3>📊 Match Analysis</h3>
+    <p>Live stat tracking and a public broadcast link so parents and fans can follow the game in real time.</p>
+  </div>
+  <div class="card">
+    <h3>👥 Team & Club Management</h3>
+    <p>Rosters, attendance, calendars, chat, and tournament tools — everything a team or club needs in one place.</p>
+  </div>
+
+  <div class="divider"></div>
+  <h2>Contact</h2>
+  <p>Questions or feedback? Reach us at <a href="mailto:contact@sportatlas.app" style="color:var(--brand);">contact@sportatlas.app</a></p>
+</main>
+
+<footer>© 2026 SportAtlas · <a href="privacy.html" style="color:inherit;">Privacy</a> · <a href="terms.html" style="color:inherit;">Terms</a></footer>
+</body>
+</html>
