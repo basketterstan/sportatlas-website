@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SportAtlas — AI Multi-Sport Coaching Platform</title>
+  <meta name="description" content="Build better athletes. SportAtlas gives coaches and clubs the tools to create drills, plan training sessions, analyse matches, and manage teams — powered by AI." />
+  <meta property="og:title" content="SportAtlas — AI Multi-Sport Coaching Platform" />
+  <meta property="og:description" content="Build better athletes with drills, match analysis, team management and AI coaching — all in one app." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#0E1013" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0E1013;
+      --surface:   #16191F;
+      --surface2:  #1E222A;
+      --line:      #272C35;
+      --line2:     #343A45;
+      --text-hi:   #F4F5F7;
+      --text-mid:  #A8ADB8;
+      --text-low:  #6B7280;
+      --brand:     #E8743C;
+      --brand-dim: #B25A2C;
+      --brand-soft:rgba(232,116,60,0.12);
+      --success:   #34C27A;
+      --info:      #4CC2E0;
+      --warning:   #F0B429;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-hi);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: .5;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      height: 64px;
+      background: rgba(14,16,19,0.8);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      text-decoration: none;
+      color: var(--text-hi);
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: -.02em;
+    }
+
+    .nav-logo-icon {
+      width: 32px; height: 32px;
+      background: var(--brand);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-mid);
+      font-size: .9rem;
+      font-weight: 500;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--text-hi); }
+
+    .btn-nav {
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      padding: .5rem 1.25rem;
+      border-radius: 8px;
+      font-size: .9rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background .2s, transform .15s;
+    }
+    .btn-nav:hover { background: #f08040; transform: translateY(-1px); }
+
+    .nav-mobile-hide { display: flex; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6rem clamp(1.5rem, 5vw, 4rem) 4rem;
+      overflow: hidden;
+    }
+
+    /* animated gradient orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: .35;
+      animation: drift 12s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .orb-1 { width: 600px; height: 600px; background: var(--brand); top: -200px; left: -200px; animation-delay: 0s; }
+    .orb-2 { width: 500px; height: 500px; background: #4a1b6b; top: 0; right: -150px; animation-delay: -4s; }
+    .orb-3 { width: 400px; height: 400px; background: #1b3a6b; bottom: -100px; left: 30%; animation-delay: -8s; }
+
+    @keyframes drift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33%       { transform: translate(40px, -30px) scale(1.05); }
+      66%       { transform: translate(-20px, 20px) scale(.95); }
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: var(--brand-soft);
+      border: 1px solid rgba(232,116,60,.25);
+      border-radius: 999px;
+      padding: .35rem 1rem;
+      font-size: .8rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--brand);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 1.75rem;
+      position: relative;
+    }
+
+    .eyebrow-dot {
+      width: 6px; height: 6px;
+      background: var(--brand);
+      border-radius: 50%;
+      animation: pulse-dot 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: .4; transform: scale(.7); }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      font-weight: 900;
+      letter-spacing: -.04em;
+      line-height: 1.05;
+      max-width: 900px;
+      position: relative;
+    }
+
+    .hero h1 .accent {
+      background: linear-gradient(135deg, var(--brand) 0%, #f0a060 50%, var(--brand) 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 4s linear infinite;
+    }
+    @keyframes shimmer {
+      0%   { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--text-mid);
+      max-width: 600px;
+      margin: 1.5rem auto 2.5rem;
+      position: relative;
+      font-weight: 400;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      background: var(--brand);
+      color: #fff;
+      text-decoration: none;
+      padding: .9rem 2rem;
+      border-radius: 12px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      transition: all .2s;
+      box-shadow: 0 0 0 0 rgba(232,116,60,.4);
+      animation: glow-pulse 3s ease-in-out infinite;
+    }
+    .btn-primary:hover { background: #f08040; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(232,116,60,.35); }
+
+    @keyframes glow-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(232,116,60,.25); }
+      50%       { box-shadow: 0 0 0 12px rgba(232,116,60,.0); }
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      background: var(--surface);
+      color: var(--text-hi);
+      text-decoration: none;
+      padding: .9rem 2rem;
+      border-radius: 12px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      border: 1px solid var(--line2);
+      transition: all .2s;
+    }
+    .btn-secondary:hover { background: var(--surface2); transform: translateY(-2px); }
+
+    /* ── SPORTS STRIP ── */
+    .sports-strip {
+      position: relative;
+      padding: 3rem clamp(1.5rem, 5vw, 4rem);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+    }
+
+    .sports-scroll {
+      display: flex;
+      gap: 2rem;
+      animation: scroll-left 20s linear infinite;
+      width: max-content;
+    }
+
+    .sports-scroll-wrap {
+      overflow: hidden;
+      mask: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    }
+
+    @keyframes scroll-left {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    .sport-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: .5rem 1.25rem;
+      font-size: .9rem;
+      font-weight: 600;
+      white-space: nowrap;
+      color: var(--text-mid);
+    }
+    .sport-chip span { font-size: 1.2rem; }
+
+    /* ── SECTION COMMON ── */
+    section {
+      position: relative;
+      padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 5vw, 4rem);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--brand);
+      margin-bottom: .75rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -.03em;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    .section-sub {
+      color: var(--text-mid);
+      font-size: 1.05rem;
+      max-width: 560px;
+      margin-bottom: 3rem;
+    }
+
+    /* ── FEATURE GRID ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 1.75rem;
+      transition: all .3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--brand-soft) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    .feature-card:hover { border-color: rgba(232,116,60,.35); transform: translateY(-3px); }
+    .feature-card:hover::before { opacity: 1; }
+
+    .feature-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: var(--brand-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: .4rem;
+    }
+
+    .feature-card p {
+      font-size: .9rem;
+      color: var(--text-mid);
+      line-height: 1.6;
+    }
+
+    .feature-tag {
+      display: inline-block;
+      margin-top: .75rem;
+      font-size: .72rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--brand);
+      background: var(--brand-soft);
+      padding: .2rem .6rem;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    /* ── BIG FEATURE SHOWCASE ── */
+    .showcase {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+    .showcase.reverse { direction: rtl; }
+    .showcase.reverse > * { direction: ltr; }
+
+    .showcase-visual {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .mock-screen {
+      width: 90%; height: 90%;
+      background: var(--surface2);
+      border-radius: 12px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
+    }
+
+    .mock-bar {
+      height: 10px;
+      border-radius: 999px;
+      background: var(--line2);
+    }
+    .mock-bar.brand { background: var(--brand); width: 40%; }
+    .mock-bar.short { width: 60%; }
+    .mock-bar.shorter { width: 30%; }
+
+    .mock-card-row {
+      display: flex;
+      gap: .5rem;
+      flex: 1;
+    }
+
+    .mock-card {
+      background: var(--line);
+      border-radius: 8px;
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+    .mock-card::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: var(--brand-soft);
+      border: 2px solid rgba(232,116,60,.3);
+    }
+
+    /* court diagram mock */
+    .mock-court {
+      width: 100%; height: 100%;
+      background: #0a2010;
+      border-radius: 8px;
+      border: 2px solid #1a4020;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .mock-court::before {
+      content: '';
+      position: absolute;
+      width: 40%; height: 55%;
+      border: 2px solid rgba(255,255,255,.15);
+      border-radius: 4px;
+    }
+    .court-dot {
+      position: absolute;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      border: 2px solid;
+    }
+    .court-dot.home { background: var(--brand); border-color: var(--brand); }
+    .court-dot.away { background: var(--info); border-color: var(--info); }
+    .court-arrow {
+      position: absolute;
+      width: 40px; height: 2px;
+      background: var(--brand);
+      transform-origin: left center;
+    }
+
+    .showcase-text .section-label { margin-top: 0; }
+    .showcase-text h2 {
+      font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -.03em;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+    .showcase-text p {
+      color: var(--text-mid);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+
+    .check-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: .6rem;
+    }
+    .check-list li {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      font-size: .95rem;
+      color: var(--text-mid);
+    }
+    .check-list li::before {
+      content: '✓';
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px; height: 20px;
+      background: rgba(52,194,122,.15);
+      color: var(--success);
+      border-radius: 50%;
+      font-size: .7rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* ── STATS ── */
+    .stats-section {
+      background: var(--surface);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      max-width: 100%;
+    }
+    .stats-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem clamp(1.5rem, 5vw, 4rem);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      text-align: center;
+    }
+    .stat-num {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 900;
+      letter-spacing: -.04em;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--brand), #f0a060);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-label {
+      font-size: .9rem;
+      color: var(--text-mid);
+      margin-top: .4rem;
+      font-weight: 500;
+    }
+
+    /* ── PRICING ── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    .pricing-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 2rem;
+      position: relative;
+      transition: all .3s;
+    }
+    .pricing-card.featured {
+      border-color: var(--brand);
+      background: linear-gradient(160deg, rgba(232,116,60,.06) 0%, var(--surface) 40%);
+    }
+    .pricing-card:hover { transform: translateY(-4px); }
+
+    .featured-badge {
+      position: absolute;
+      top: -12px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--brand);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: .3rem 1rem;
+      border-radius: 999px;
+    }
+
+    .pricing-name {
+      font-size: .8rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text-low);
+      margin-bottom: .5rem;
+    }
+
+    .pricing-price {
+      font-size: 2.8rem;
+      font-weight: 900;
+      letter-spacing: -.04em;
+      line-height: 1;
+      margin-bottom: .25rem;
+    }
+    .pricing-period { font-size: .9rem; color: var(--text-low); margin-bottom: 1.25rem; }
+
+    .pricing-divider {
+      height: 1px;
+      background: var(--line);
+      margin: 1.25rem 0;
+    }
+
+    .pricing-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: .6rem;
+    }
+    .pricing-features li {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .9rem;
+      color: var(--text-mid);
+    }
+    .pricing-features .check { color: var(--success); font-size: .75rem; }
+    .pricing-features .cross { color: var(--text-low); font-size: .75rem; }
+
+    .btn-plan {
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      margin-top: 1.5rem;
+      padding: .8rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: .95rem;
+      transition: all .2s;
+    }
+    .btn-plan.primary { background: var(--brand); color: #fff; }
+    .btn-plan.primary:hover { background: #f08040; }
+    .btn-plan.outline { background: transparent; color: var(--text-hi); border: 1px solid var(--line2); }
+    .btn-plan.outline:hover { background: var(--surface2); }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .testimonial-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+    .testimonial-stars {
+      color: var(--warning);
+      font-size: 1rem;
+      margin-bottom: .75rem;
+      letter-spacing: .1em;
+    }
+    .testimonial-text {
+      font-size: .95rem;
+      color: var(--text-mid);
+      line-height: 1.65;
+      margin-bottom: 1rem;
+    }
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+    .testimonial-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .9rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .testimonial-name { font-size: .9rem; font-weight: 600; }
+    .testimonial-role { font-size: .8rem; color: var(--text-low); }
+
+    /* ── CTA BANNER ── */
+    .cta-banner {
+      max-width: 100%;
+      background: linear-gradient(135deg, #1a0d06 0%, #1E222A 50%, #0e0a1a 100%);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .cta-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 6rem clamp(1.5rem, 5vw, 4rem);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-inner::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(232,116,60,.15) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .cta-inner h2 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      letter-spacing: -.04em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    .cta-inner p {
+      color: var(--text-mid);
+      font-size: 1.1rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+    .cta-inner .btn-primary { font-size: 1.15rem; padding: 1rem 2.5rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--line);
+      padding: 3rem clamp(1.5rem, 5vw, 4rem) 2rem;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+    .footer-brand h3 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: .5rem;
+    }
+    .footer-brand p {
+      font-size: .875rem;
+      color: var(--text-low);
+      line-height: 1.6;
+      max-width: 260px;
+    }
+    .footer-col h4 {
+      font-size: .8rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text-low);
+      margin-bottom: 1rem;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: .6rem; }
+    .footer-col a {
+      text-decoration: none;
+      color: var(--text-mid);
+      font-size: .9rem;
+      transition: color .2s;
+    }
+    .footer-col a:hover { color: var(--text-hi); }
+    .footer-bottom {
+      border-top: 1px solid var(--line);
+      padding-top: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: .85rem;
+      color: var(--text-low);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* ── SCROLL ANIMATIONS ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .showcase { grid-template-columns: 1fr; }
+      .showcase.reverse { direction: ltr; }
+      .showcase-visual { order: -1; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .nav-mobile-hide { display: none; }
+      .footer-brand { grid-column: span 2; }
+    }
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-brand { grid-column: span 1; }
+    }
+
+    /* ── ANIMATED COUNTER ── */
+    .counter { display: inline-block; }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVBAR ── -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          <path d="M2 12h20"/>
+        </svg>
+      </div>
+      SportAtlas
+    </a>
+
+    <ul class="nav-links nav-mobile-hide">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#showcase">How it works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+    </ul>
+
+    <a href="https://sportatlas.app/webapp" class="btn-nav">Launch App →</a>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <div class="hero">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="hero-eyebrow">
+      <span class="eyebrow-dot"></span>
+      AI-Powered Coaching Platform
+    </div>
+
+    <h1>
+      Build better athletes.<br>
+      <span class="accent">Coach smarter.</span>
+    </h1>
+
+    <p class="hero-sub">
+      SportAtlas gives coaches and clubs everything they need — drill libraries, match analysis, team management, and an AI coach — all in one powerful platform.
+    </p>
+
+    <div class="hero-cta">
+      <a href="https://sportatlas.app/webapp" class="btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        Open the App
+      </a>
+      <a href="#features" class="btn-secondary">
+        See features
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 9l6 6 6-6"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- ── SPORTS STRIP ── -->
+  <div class="sports-strip">
+    <div class="sports-scroll-wrap">
+      <div class="sports-scroll">
+        <!-- doubled for seamless loop -->
+        <div class="sport-chip"><span>🏀</span> Basketball</div>
+        <div class="sport-chip"><span>⚽</span> Soccer</div>
+        <div class="sport-chip"><span>🏈</span> American Football</div>
+        <div class="sport-chip"><span>🏐</span> Volleyball</div>
+        <div class="sport-chip"><span>🏉</span> Rugby</div>
+        <div class="sport-chip"><span>🎾</span> Tennis</div>
+        <div class="sport-chip"><span>🏀</span> Basketball</div>
+        <div class="sport-chip"><span>⚽</span> Soccer</div>
+        <div class="sport-chip"><span>🏈</span> American Football</div>
+        <div class="sport-chip"><span>🏐</span> Volleyball</div>
+        <div class="sport-chip"><span>🏉</span> Rugby</div>
+        <div class="sport-chip"><span>🎾</span> Tennis</div>
+        <div class="sport-chip"><span>🏀</span> Basketball</div>
+        <div class="sport-chip"><span>⚽</span> Soccer</div>
+        <div class="sport-chip"><span>🏈</span> American Football</div>
+        <div class="sport-chip"><span>🏐</span> Volleyball</div>
+        <div class="sport-chip"><span>🏉</span> Rugby</div>
+        <div class="sport-chip"><span>🎾</span> Tennis</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FEATURES ── -->
+  <section id="features">
+    <div class="fade-up">
+      <div class="section-label">Everything you need</div>
+      <h2 class="section-title">One platform.<br>Every sport.</h2>
+      <p class="section-sub">From grassroots clubs to elite academies, SportAtlas has the tools to take your coaching to the next level.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card fade-up" style="transition-delay:.05s">
+        <div class="feature-icon">📋</div>
+        <h3>Drill Library</h3>
+        <p>Create, save, and share drills with detailed diagrams, video links, and coaching notes. Filter by skill focus and level.</p>
+        <span class="feature-tag">Free</span>
+      </div>
+
+      <div class="feature-card fade-up" style="transition-delay:.1s">
+        <div class="feature-icon">🤖</div>
+        <h3>AI Coach</h3>
+        <p>Get instant drill suggestions, practice plans, and tactical advice from an AI trained on coaching best practices.</p>
+        <span class="feature-tag">Pro</span>
+      </div>
+
+      <div class="feature-card fade-up" style="transition-delay:.15s">
+        <div class="feature-icon">📊</div>
+        <h3>Match Analysis</h3>
+        <p>Track live stats, upload game footage, and broadcast matches to your team with real-time commentary tools.</p>
+        <span class="feature-tag">Pro</span>
+      </div>
+
+      <div class="feature-card fade-up" style="transition-delay:.2s">
+        <div class="feature-icon">📅</div>
+        <h3>Training Sessions</h3>
+        <p>Build complete training sessions by assembling drills into a structured plan. Share directly with your squad.</p>
+        <span class="feature-tag">Free</span>
+      </div>
+
+      <div class="feature-card fade-up" style="transition-delay:.25s">
+        <div class="feature-icon">👥</div>
+        <h3>Team Manager</h3>
+        <p>Manage rosters, track attendance, schedule events, and communicate with players and parents in one place.</p>
+        <span class="feature-tag">Pro</span>
+      </div>
+
+      <div class="feature-card fade-up" style="transition-delay:.3s">
+        <div class="feature-icon">🏛️</div>
+        <h3>Club HQ</h3>
+        <p>Run your entire club — multiple teams, coaches, tournament brackets, and shared playbooks — from a single dashboard.</p>
+        <span class="feature-tag">Club</span>
+      </div>
+
+      <div class="feature-card fade-up" style="transition-delay:.35s">
+        <div class="feature-icon">💬</div>
+        <h3>Coach Hub</h3>
+        <p>Connect with coaches worldwide. Share drills, discuss tactics, and discover community-created playbooks.</p>
+        <span class="feature-tag">Free</span>
+      </div>
+
+      <div class="feature-card fade-up" style="transition-delay:.4s">
+        <div class="feature-icon">📍</div>
+        <h3>Local Courts</h3>
+        <p>Find basketball courts, soccer fields, and sport facilities near you on an interactive map.</p>
+        <span class="feature-tag">Free</span>
+      </div>
+
+      <div class="feature-card fade-up" style="transition-delay:.45s">
+        <div class="feature-icon">🎬</div>
+        <h3>Content Studio</h3>
+        <p>Create shareable drill videos and social media content from your playbook — straight from the app.</p>
+        <span class="feature-tag">Pro</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STATS ── -->
+  <div class="stats-section">
+    <div class="stats-inner">
+      <div class="fade-up">
+        <div class="stat-num"><span class="counter" data-target="6">0</span>+</div>
+        <div class="stat-label">Sports supported</div>
+      </div>
+      <div class="fade-up" style="transition-delay:.1s">
+        <div class="stat-num"><span class="counter" data-target="1000">0</span>+</div>
+        <div class="stat-label">Drills in the community</div>
+      </div>
+      <div class="fade-up" style="transition-delay:.2s">
+        <div class="stat-num"><span class="counter" data-target="7">0</span></div>
+        <div class="stat-label">Skill levels covered</div>
+      </div>
+      <div class="fade-up" style="transition-delay:.3s">
+        <div class="stat-num">iOS &amp; Web</div>
+        <div class="stat-label">Available on all platforms</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SHOWCASE 1: DRILL BUILDER ── -->
+  <section id="showcase">
+    <div class="showcase fade-up">
+      <div class="showcase-visual">
+        <div class="mock-screen">
+          <div class="mock-bar brand"></div>
+          <div class="mock-bar short"></div>
+          <div style="flex:1; background: #0a2010; border-radius:8px; position:relative; overflow:hidden;">
+            <div class="mock-court">
+              <!-- players -->
+              <div class="court-dot home" style="top:30%; left:30%;"></div>
+              <div class="court-dot home" style="top:30%; right:30%;"></div>
+              <div class="court-dot home" style="bottom:35%; left:50%;"></div>
+              <div class="court-dot away" style="top:40%; left:50%;"></div>
+              <div class="court-dot away" style="bottom:40%; left:35%;"></div>
+              <!-- arrows -->
+              <div class="court-arrow" style="top:31%; left:33%; transform: rotate(15deg);"></div>
+              <div class="court-arrow" style="top:42%; right:38%; transform: rotate(-30deg);"></div>
+            </div>
+          </div>
+          <div class="mock-bar shorter"></div>
+        </div>
+      </div>
+      <div class="showcase-text">
+        <div class="section-label">Drill Designer</div>
+        <h2>Design plays on a real court diagram</h2>
+        <p>Draw movements, passes, and screens directly on interactive court visuals. Supports half-court, full-court, and sport-specific fields for all 6 sports.</p>
+        <ul class="check-list">
+          <li>Animated player movements</li>
+          <li>Pass, run, screen & dribble lines</li>
+          <li>Basketball, soccer, rugby & more</li>
+          <li>Share as image or PDF</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SHOWCASE 2: MATCH ANALYSIS ── -->
+  <section>
+    <div class="showcase reverse fade-up">
+      <div class="showcase-visual">
+        <div class="mock-screen">
+          <div style="display:flex; gap:.5rem; align-items:center; margin-bottom:.5rem;">
+            <div class="mock-bar brand" style="width:20%; height:8px;"></div>
+            <div style="margin-left:auto; width:8px; height:8px; border-radius:50%; background: #E5484D; animation: pulse-dot 1s infinite;"></div>
+            <span style="font-size:.5rem; font-family:'JetBrains Mono',monospace; color:#E5484D; font-weight:700;">LIVE</span>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:.5rem; flex:1;">
+            <div style="background:var(--line); border-radius:8px; padding:.75rem; display:flex; flex-direction:column; gap:.3rem;">
+              <div style="font-size:.5rem; font-family:'JetBrains Mono',monospace; color:var(--text-low); font-weight:700; text-transform:uppercase;">HOME</div>
+              <div style="font-size:1.5rem; font-weight:900; color:var(--brand); line-height:1;">42</div>
+              <div style="height:3px; background:var(--brand); border-radius:2px; width:70%;"></div>
+            </div>
+            <div style="background:var(--line); border-radius:8px; padding:.75rem; display:flex; flex-direction:column; gap:.3rem;">
+              <div style="font-size:.5rem; font-family:'JetBrains Mono',monospace; color:var(--text-low); font-weight:700; text-transform:uppercase;">AWAY</div>
+              <div style="font-size:1.5rem; font-weight:900; color:var(--info); line-height:1;">38</div>
+              <div style="height:3px; background:var(--info); border-radius:2px; width:55%;"></div>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:.35rem;">
+            <div style="height:6px; background:var(--line); border-radius:4px;"></div>
+            <div style="height:6px; background:var(--line); border-radius:4px; width:80%;"></div>
+            <div style="height:6px; background:var(--line); border-radius:4px; width:60%;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="showcase-text">
+        <div class="section-label">Match Analysis</div>
+        <h2>Live stats. Real-time insights.</h2>
+        <p>Track every basket, goal, and event live during a game. Broadcast the scoreboard to parents and fans with a shareable link — no app required on their end.</p>
+        <ul class="check-list">
+          <li>Live scoring & play tracking</li>
+          <li>Public viewer link for fans</li>
+          <li>Post-game video upload & review</li>
+          <li>Match archive for season history</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SHOWCASE 3: AI COACH ── -->
+  <section>
+    <div class="showcase fade-up">
+      <div class="showcase-visual">
+        <div class="mock-screen">
+          <div style="display:flex; align-items:center; gap:.5rem; margin-bottom:.75rem;">
+            <div style="width:24px;height:24px;border-radius:6px;background:var(--brand);display:flex;align-items:center;justify-content:center;font-size:.65rem;">🤖</div>
+            <div style="font-size:.6rem;font-family:'JetBrains Mono',monospace;color:var(--brand);font-weight:700;">AI COACH</div>
+          </div>
+          <div style="background:var(--line);border-radius:8px;padding:.75rem;margin-bottom:.5rem;">
+            <div style="font-size:.55rem;color:var(--text-low);margin-bottom:.35rem;">You</div>
+            <div style="font-size:.65rem;color:var(--text-hi);line-height:1.5;">"Give me 3 drills for improving ball-handling for U14 players"</div>
+          </div>
+          <div style="background:rgba(232,116,60,.08);border:1px solid rgba(232,116,60,.2);border-radius:8px;padding:.75rem;flex:1;">
+            <div style="font-size:.55rem;color:var(--brand);margin-bottom:.35rem;font-weight:700;">AI Coach</div>
+            <div style="font-size:.6rem;color:var(--text-mid);line-height:1.6;">
+              Here are 3 drills tailored for U14 ball-handling:<br/><br/>
+              <span style="color:var(--brand);font-weight:700;">1.</span> Figure-8 Dribble — 2 cones, 3 sets<br/>
+              <span style="color:var(--brand);font-weight:700;">2.</span> Two-Ball Pound — wall drill, 60s<br/>
+              <span style="color:var(--brand);font-weight:700;">3.</span> Speed Dribble Circuit — 4 stations
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="showcase-text">
+        <div class="section-label">AI Coach</div>
+        <h2>Your personal coaching assistant, 24/7</h2>
+        <p>Powered by Google Gemini, the AI Coach understands your sport, your level, and your players. Get custom drill suggestions, full practice plans, and tactical breakdowns in seconds.</p>
+        <ul class="check-list">
+          <li>Custom drill generation</li>
+          <li>Full training session plans</li>
+          <li>Tactical Q&A for any sport</li>
+          <li>Saves suggestions to your library</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PRICING ── -->
+  <section id="pricing">
+    <div class="fade-up" style="text-align:center; max-width:600px; margin:0 auto 3rem;">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title">Start free. Scale with your team.</h2>
+      <p class="section-sub" style="margin:0 auto;">No credit card needed. Upgrade anytime.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Free -->
+      <div class="pricing-card fade-up">
+        <div class="pricing-name">Free</div>
+        <div class="pricing-price">€0</div>
+        <div class="pricing-period">Forever free</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li><span class="check">✓</span> Drill library (view)</li>
+          <li><span class="check">✓</span> 3 custom drills</li>
+          <li><span class="check">✓</span> Training sessions (basic)</li>
+          <li><span class="check">✓</span> Local courts map</li>
+          <li><span class="check">✓</span> Coach Hub community</li>
+          <li><span class="cross">—</span> AI Coach</li>
+          <li><span class="cross">—</span> Match analysis</li>
+          <li><span class="cross">—</span> Team management</li>
+        </ul>
+        <a href="https://sportatlas.app/webapp" class="btn-plan outline">Get started free</a>
+      </div>
+
+      <!-- Pro -->
+      <div class="pricing-card featured fade-up" style="transition-delay:.1s">
+        <div class="featured-badge">Most Popular</div>
+        <div class="pricing-name">Pro</div>
+        <div class="pricing-price" style="background:linear-gradient(135deg,var(--brand),#f0a060);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">€9</div>
+        <div class="pricing-period">per month</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li><span class="check">✓</span> Unlimited drills</li>
+          <li><span class="check">✓</span> AI Coach</li>
+          <li><span class="check">✓</span> Match analysis & stats</li>
+          <li><span class="check">✓</span> Team management</li>
+          <li><span class="check">✓</span> Scrimmage Hub</li>
+          <li><span class="check">✓</span> Content Studio</li>
+          <li><span class="check">✓</span> Match broadcaster</li>
+          <li><span class="cross">—</span> Multi-team club tools</li>
+        </ul>
+        <a href="https://sportatlas.app/webapp" class="btn-plan primary">Start Pro</a>
+      </div>
+
+      <!-- Club -->
+      <div class="pricing-card fade-up" style="transition-delay:.2s">
+        <div class="pricing-name">Club</div>
+        <div class="pricing-price">€29</div>
+        <div class="pricing-period">per month</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li><span class="check">✓</span> Everything in Pro</li>
+          <li><span class="check">✓</span> Multiple teams</li>
+          <li><span class="check">✓</span> Club HQ dashboard</li>
+          <li><span class="check">✓</span> Tournament builder</li>
+          <li><span class="check">✓</span> Shared club playbook</li>
+          <li><span class="check">✓</span> Multiple coaches</li>
+          <li><span class="check">✓</span> Priority support</li>
+          <li><span class="check">✓</span> Club analytics</li>
+        </ul>
+        <a href="https://sportatlas.app/webapp" class="btn-plan outline">Start Club</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TESTIMONIALS ── -->
+  <section>
+    <div class="fade-up" style="margin-bottom:2.5rem;">
+      <div class="section-label">Coaches love it</div>
+      <h2 class="section-title">Trusted by coaches worldwide</h2>
+    </div>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card fade-up">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Finally a coaching app that does everything. I use it to plan practices, track stats live during games, and share drills with my assistant coaches. Game changer."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:#B25A2C;">MV</div>
+          <div>
+            <div class="testimonial-name">Marc V.</div>
+            <div class="testimonial-role">U16 Basketball Coach</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card fade-up" style="transition-delay:.1s">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"The AI coach suggested drills I never would have thought of. My players' ball handling improved noticeably in just two weeks of using the AI-suggested sessions."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:#1b5e20;">SL</div>
+          <div>
+            <div class="testimonial-name">Sophie L.</div>
+            <div class="testimonial-role">Youth Soccer Coach</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card fade-up" style="transition-delay:.2s">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Club HQ makes managing 6 teams a breeze. All coaches share a common drill library and the tournament bracket tool saved us hours of spreadsheet work."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:#0d47a1;">JD</div>
+          <div>
+            <div class="testimonial-name">Jan D.</div>
+            <div class="testimonial-role">Sports Club Director</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA BANNER ── -->
+  <div class="cta-banner">
+    <div class="cta-inner fade-up">
+      <h2>Ready to coach<br><span style="background:linear-gradient(135deg,var(--brand),#f0a060);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">at a higher level?</span></h2>
+      <p>Join thousands of coaches already using SportAtlas. Free to start — no credit card required.</p>
+      <a href="https://sportatlas.app/webapp" class="btn-primary" style="font-size:1.15rem; padding:1rem 2.5rem;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        Open SportAtlas
+      </a>
+    </div>
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3>SportAtlas</h3>
+          <p>AI-powered coaching platform for every sport. Build better athletes, run better teams.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="https://sportatlas.app/webapp">Web App</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Sports</h4>
+          <ul>
+            <li><a href="https://sportatlas.app/webapp">Basketball</a></li>
+            <li><a href="https://sportatlas.app/webapp">Soccer</a></li>
+            <li><a href="https://sportatlas.app/webapp">Volleyball</a></li>
+            <li><a href="https://sportatlas.app/webapp">Rugby</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="https://sportatlas.app/webapp">About</a></li>
+            <li><a href="https://sportatlas.app/webapp">Privacy Policy</a></li>
+            <li><a href="https://sportatlas.app/webapp">Terms</a></li>
+            <li><a href="https://sportatlas.app/webapp">Support</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 SportAtlas. All rights reserved.</span>
+        <span style="font-family:'JetBrains Mono',monospace; font-size:.75rem; color:var(--text-low);">Built for coaches. By coaches.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── Scroll animations ──
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // ── Animated counters ──
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        const target = +el.dataset.target;
+        const duration = 1200;
+        const start = performance.now();
+        const tick = (now) => {
+          const progress = Math.min((now - start) / duration, 1);
+          const ease = 1 - Math.pow(1 - progress, 3);
+          el.textContent = Math.round(ease * target).toLocaleString();
+          if (progress < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+        counterObserver.unobserve(el);
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
+
+    // ── Smooth nav hide on scroll ──
+    let lastY = 0;
+    const nav = document.querySelector('nav');
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      if (y > 80 && y > lastY) {
+        nav.style.transform = 'translateY(-100%)';
+        nav.style.transition = 'transform .3s ease';
+      } else {
+        nav.style.transform = 'translateY(0)';
+      }
+      lastY = y;
+    }, { passive: true });
+  </script>
+</body>
+</html>
